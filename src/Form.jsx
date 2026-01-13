@@ -1,13 +1,14 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './Form.css'
 
-function Form() {
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: ''
-  })
+const initialFormData = {
+  name: '',
+  email: '',
+  message: ''
+}
 
+function Form() {
+  const [formData, setFormData] = useState(initialFormData)
   const [submitted, setSubmitted] = useState(false)
 
   const handleChange = (e) => {
@@ -20,19 +21,19 @@ function Form() {
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    console.log('Form submitted:', formData)
     setSubmitted(true)
-    
-    // Reset form after 2 seconds
-    setTimeout(() => {
-      setFormData({
-        name: '',
-        email: '',
-        message: ''
-      })
-      setSubmitted(false)
-    }, 2000)
   }
+
+  useEffect(() => {
+    if (submitted) {
+      const timeoutId = setTimeout(() => {
+        setFormData(initialFormData)
+        setSubmitted(false)
+      }, 2000)
+
+      return () => clearTimeout(timeoutId)
+    }
+  }, [submitted])
 
   return (
     <div className="form-container">
