@@ -70,12 +70,12 @@ function Form() {
             name="message"
             value={formData.message}
             onChange={handleChange}
-            rows="4"
+            rows={4}
             required
           />
         </div>
         
-        <button type="submit">送信</button>
+        <button type="submit" disabled={submitted}>送信</button>
         
         {submitted && (
           <p className="success-message">送信完了しました！</p>
