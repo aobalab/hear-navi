@@ -48,7 +48,7 @@
 }
 
 :root {
-  --background: oklch(1 0 0);
+  --background: #F4F8FF;
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
@@ -82,7 +82,7 @@
   --sidebar-ring: oklch(0.708 0 0);
 }
 
-.dark {
+/* .dark {
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
@@ -114,13 +114,44 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
-}
+} */
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
+
   body {
     @apply bg-background text-foreground;
   }
+}
+
+header {
+  background-color: #6599FF;
+  border-radius: 0 0 100px 100px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.main-side-bar {
+  background-color: rgba(255, 255, 255, 0.5);
+  border-radius: 20px 20px 20px 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  color: #6599FF;
+}
+
+.main-content {
+  background-color: #FFF;
+  border-radius: 20px 20px 20px 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.main-content-label {}
+
+.button {
+  background-color: #6599FF;
+  color: #FFF;
+  border: none;
+  border-radius: 10px;
+  padding: 10px 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
