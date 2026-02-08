@@ -6,17 +6,6 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true,
   },
-  experimental: {
-    fontLoaders: [
-      {
-        loader: '@next/font/google',
-        options: { 
-          subsets: ['latin'],
-          display: 'swap',
-        },
-      },
-    ],
-  },
 };
 
 export default nextConfig;
