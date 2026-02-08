@@ -145,7 +145,14 @@ header {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
 
-.main-content-label {}
+.main-header {
+  background-color: #6599FF;
+  border-radius: 20px 20px 20px 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  color: #FFF;
+  display: flex;
+  justify-content: center;
+}
 
 .button {
   background-color: #6599FF;
