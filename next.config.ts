@@ -1,7 +1,22 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  output: 'export',
+  basePath: process.env.NODE_ENV === 'production' ? '/hear-navi' : '',
+  images: {
+    unoptimized: true,
+  },
+  experimental: {
+    fontLoaders: [
+      {
+        loader: '@next/font/google',
+        options: { 
+          subsets: ['latin'],
+          display: 'swap',
+        },
+      },
+    ],
+  },
 };
 
 export default nextConfig;
