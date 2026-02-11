@@ -1,4 +1,5 @@
 import { Categories } from "@/app/hearing/config";
+import nextConfig from "@/next.config";
 import Link from "next/link";
 
 function SideBar({ category }: { category: string }) {
@@ -9,7 +10,7 @@ function SideBar({ category }: { category: string }) {
                 <Link href={`/hearing/${key}/${category.sections[0].title}`} key={category.label}>
                     <div key={category.label} className="main-side-bar-item text-center flex flex-col items-center gap-2 p-1">
                         <figure>
-                            <img src={`/img/${category.label}_${category.label === currentCategoryLabel ? "黄色" : "青"}.png`} alt={category.label} />
+                            <img src={nextConfig.basePath + `/img/${category.label}_${category.label === currentCategoryLabel ? "黄色" : "青"}.png`} alt={category.label} />
                         </figure>
                         <span>
                             {category.label}
