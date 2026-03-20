@@ -1,7 +1,8 @@
-import { Categories } from '../../config';
-import { Label } from "@/components/ui/label"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { notFound } from "next/navigation";
+
+import { questionComponents } from "@/components/questions";
 import Summary from "@/components/summary";
+import { Categories } from '../../config';
 
 export function generateStaticParams() {
     const params: { category: string; section: string }[] = [];
@@ -18,28 +19,37 @@ export function generateStaticParams() {
     return params;
 }
 
-export default function Page() {
+interface PageProps {
+    params: Promise<{ category: string; section: string }>;
+}
+
+export default async function Page({ params }: PageProps) {
+    const { category, section } = await params;
+    const currentCategory = Categories[category];
+
+    if (!currentCategory) {
+        notFound();
+    }
+
+    const currentSection = currentCategory.sections.find((item) => item.title === section);
+    const QuestionComponent = questionComponents[section];
+
+    if (!currentSection || !QuestionComponent) {
+        notFound();
+    }
+
     return (<>
         <div className="absolute main-header -top-4 left-8 pl-4 pr-4 pt-2 pb-2">
             <p className="main-header-subtitle text-md">
-                サイトが欲しくなった経緯を教えてください
+                {currentCategory.label}
             </p>
         </div>
         <div className="main-content p-8">
             <div className="mt-8 mb-12">
-                <h2 className="main-content-label mb-4 text-l font-bold">
-                    状況
-                </h2>
-                <RadioGroup defaultValue="comfortable" className="w-fit">
-                    <div className="flex items-center gap-3">
-                        <RadioGroupItem value="default" id="r1" />
-                        <Label htmlFor="r1">新しくWebサイトを作りたい</Label>
-                    </div>
-                    <div className="flex items-center gap-3">
-                        <RadioGroupItem value="comfortable" id="r2" />
-                        <Label htmlFor="r2">今あるWebサイトをリニューアルしたい</Label>
-                    </div>
-                </RadioGroup>
+                <p className="mb-6 text-sm text-muted-foreground">
+                    {currentSection.label}
+                </p>
+                <QuestionComponent />
             </div>
             <Summary />
         </div>
