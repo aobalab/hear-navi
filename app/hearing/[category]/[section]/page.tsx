@@ -20,21 +20,28 @@ export function generateStaticParams() {
 
 export default function Page() {
     return (<>
-        <div className="mt-8 mb-12">
-            <h2 className="main-content-label mb-4 text-l font-bold">
-                状況
-            </h2>
-            <RadioGroup defaultValue="comfortable" className="w-fit">
-                <div className="flex items-center gap-3">
-                    <RadioGroupItem value="default" id="r1" />
-                    <Label htmlFor="r1">新しくWebサイトを作りたい</Label>
-                </div>
-                <div className="flex items-center gap-3">
-                    <RadioGroupItem value="comfortable" id="r2" />
-                    <Label htmlFor="r2">今あるWebサイトをリニューアルしたい</Label>
-                </div>
-            </RadioGroup>
+        <div className="absolute main-header -top-4 left-8 pl-4 pr-4 pt-2 pb-2">
+            <p className="main-header-subtitle text-md">
+                サイトが欲しくなった経緯を教えてください
+            </p>
         </div>
-        <Summary />
+        <div className="main-content p-8">
+            <div className="mt-8 mb-12">
+                <h2 className="main-content-label mb-4 text-l font-bold">
+                    状況
+                </h2>
+                <RadioGroup defaultValue="comfortable" className="w-fit">
+                    <div className="flex items-center gap-3">
+                        <RadioGroupItem value="default" id="r1" />
+                        <Label htmlFor="r1">新しくWebサイトを作りたい</Label>
+                    </div>
+                    <div className="flex items-center gap-3">
+                        <RadioGroupItem value="comfortable" id="r2" />
+                        <Label htmlFor="r2">今あるWebサイトをリニューアルしたい</Label>
+                    </div>
+                </RadioGroup>
+            </div>
+            <Summary />
+        </div>
     </>);
 }
