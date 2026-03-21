@@ -4,17 +4,15 @@ import Link from "next/link";
 
 function Header({ category, section }: { category: string; section: string }) {
     return (
-        <header className="grid grid-cols-12 bg-white p-4">
-            <div className="col-span-1"></div>
-            <div className="col-span-1 flex items-center">
+        <header className="flex bg-white pt-4 pb-4 px-24">
+            <div className="flex-1 flex items-center">
                 <figure>
-                    <img src={nextConfig.basePath + "/img/logo.png"} alt="Logo" className="w-16 h-16 rounded-lg" />
+                    <img src={nextConfig.basePath + "/img/logo.png"} alt="Logo" className="w-64 rounded-lg" />
                 </figure>
             </div>
-            <div className="col-span-10 flex items-start justify-end gap-6 overflow-x-auto text-slate-700">
+            <div className="flex-1 flex items-start justify-end gap-6 overflow-x-auto text-slate-700">
                 {Object.entries(Categories).map(([key, item]) => {
                     const isActive = key === category;
-
                     return (
                         <Link
                             key={key}
@@ -53,7 +51,6 @@ function Header({ category, section }: { category: string; section: string }) {
                     </div>
                 </Link>
             </div>
-            {/* <div className="col-span-4"></div> */}
         </header>
     );
 }
