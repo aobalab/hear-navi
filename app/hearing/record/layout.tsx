@@ -1,5 +1,4 @@
 import Header from "@/components/header";
-import Sidebar from "@/components/side-bar";
 
 export default function RecordLayout({
     children,
@@ -9,9 +8,8 @@ export default function RecordLayout({
     return (
         <>
             <Header category="record" section="" />
-            <main className="main grid grid-cols-24 gap-12 pt-12 w-8/10 mx-auto">
-                <Sidebar category="record" section="" />
-                <div className="main-wrapper col-span-21 relative">{children}</div>
+            <main className="main mx-auto w-8/10 pt-12">
+                <div className="main-wrapper relative">{children}</div>
             </main>
         </>
     );
