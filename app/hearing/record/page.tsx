@@ -14,7 +14,6 @@ type RecordItem = {
     label: string;
     value: string;
     rawValue: string;
-    href: string;
     isFilled: boolean;
 };
 
@@ -428,7 +427,6 @@ export default function RecordPage() {
                             label: section.label,
                             value: normalizedValue,
                             rawValue: sectionValue,
-                            href: `/hearing/${categoryKey}/${section.title}`,
                             isFilled: normalizedValue.length > 0,
                         };
                     });
@@ -467,6 +465,7 @@ export default function RecordPage() {
                         {Object.entries(Categories).map(([categoryKey, category]) => {
                             const categoryItems = items[categoryKey] ?? [];
                             const filledCount = categoryItems.filter((item) => item.isFilled).length;
+                            const categoryHref = `/hearing/${categoryKey}/${category.sections[0].title}`;
 
                             return (
                                 <section key={categoryKey} className="rounded-2xl border border-border bg-white p-6 shadow-sm">
@@ -483,12 +482,23 @@ export default function RecordPage() {
                                                 <h2 className="text-lg font-semibold text-slate-900">{category.label}</h2>
                                             </div>
                                         </div>
-                                        <span className="text-xs text-muted-foreground">{filledCount}/{categoryItems.length}件</span>
+                                        <div className="flex items-center gap-3">
+                                            <span className="text-xs text-muted-foreground">{filledCount}/{categoryItems.length}件</span>
+                                            <Link
+                                                href={categoryHref}
+                                                className={filledCount > 0
+                                                    ? "inline-flex items-center rounded-full bg-[#6599FF] px-4 py-1.5 text-sm font-medium text-white transition-opacity hover:opacity-85"
+                                                    : "inline-flex items-center rounded-full border border-[#6599FF] px-4 py-1.5 text-sm font-medium text-[#6599FF] transition-colors hover:bg-[#6599FF]/5"
+                                                }
+                                            >
+                                                {filledCount > 0 ? "編集する" : "入力する"}
+                                            </Link>
+                                        </div>
                                     </div>
                                     <div className="space-y-4">
                                         {categoryItems.map((item) => (
                                             <div key={item.key} className={item.isFilled ? "rounded-xl bg-slate-50 p-4" : "rounded-xl border border-dashed border-slate-200 bg-slate-50/40 p-4"}>
-                                                <div className="mb-2 flex items-center justify-between gap-4">
+                                                <div className="mb-2 flex items-center gap-4">
                                                     <div className={categoryKey === "function" && item.key === "site-category" ? "flex items-center gap-4" : "flex items-center gap-2"}>
                                                         {categoryKey === "target" ? getTargetCardIcon(item.key, answers) : null}
                                                         {categoryKey === "function" && item.key === "site-category" ? (
@@ -510,15 +520,6 @@ export default function RecordPage() {
                                                             ) : null}
                                                         </div>
                                                     </div>
-                                                    <Link
-                                                        href={item.href}
-                                                        className={item.isFilled
-                                                            ? "inline-flex items-center rounded-full bg-[#6599FF] px-4 py-1.5 text-sm font-medium text-white transition-opacity hover:opacity-85"
-                                                            : "inline-flex items-center rounded-full border border-[#6599FF] px-4 py-1.5 text-sm font-medium text-[#6599FF] transition-colors hover:bg-[#6599FF]/5"
-                                                        }
-                                                    >
-                                                        {item.isFilled ? "編集する" : "入力する"}
-                                                    </Link>
                                                 </div>
                                                 {categoryKey === "proposal" && item.key === "schedule" ? (
                                                     <ScheduleCalendarCard rawValue={item.rawValue} />
