@@ -29,7 +29,6 @@ export const Categories: Record<string, {
     function: {
         label: "機能",
         sections: [
-            { title: "self-introduction", label: "自己紹介" },
             { title: "site-category", label: "サイト種類" },
             { title: "site-page", label: "サイトページ" },
             { title: "site-function", label: "サイト機能" },

@@ -9,10 +9,9 @@ import UserTypeQuestion from "@/components/questions/02-target/01-user-type";
 import GenderQuestion from "@/components/questions/02-target/02-gender";
 import AgeQuestion from "@/components/questions/02-target/03-age";
 import StatusQuestion from "@/components/questions/02-target/04-status";
-import SelfIntroductionFunctionQuestion from "@/components/questions/03-function/01-self-introduction";
-import SiteCategoryQuestion from "@/components/questions/03-function/02-site-category";
-import SitePageQuestion from "@/components/questions/03-function/03-site-page";
-import SiteFunctionQuestion from "@/components/questions/03-function/04-site-function";
+import SiteCategoryQuestion from "@/components/questions/03-function/01-site-category";
+import SitePageQuestion from "@/components/questions/03-function/02-site-page";
+import SiteFunctionQuestion from "@/components/questions/03-function/03-site-function";
 import AbstractQuestion from "@/components/questions/04-image/01-abstract";
 import Impression1Question from "@/components/questions/04-image/02-impression1";
 import Impression2Question from "@/components/questions/04-image/03-impression2";
@@ -35,7 +34,6 @@ export const questionComponents: Record<string, Record<string, ComponentType>> =
         status: StatusQuestion,
     },
     function: {
-        "self-introduction": SelfIntroductionFunctionQuestion,
         "site-category": SiteCategoryQuestion,
         "site-page": SitePageQuestion,
         "site-function": SiteFunctionQuestion,
