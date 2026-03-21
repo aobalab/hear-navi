@@ -128,27 +128,26 @@
 
 header {
   background-color: #FFF;
-  border-radius: 0 0 100px 100px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 .main-side-bar {
   background-color: rgba(255, 255, 255, 0.5);
   border-radius: 20px 20px 20px 20px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 5px rgba(0, 0, 0, 0.2);
   color: #6599FF;
 }
 
 .main-content {
   background-color: #FFF;
   border-radius: 20px 20px 20px 20px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 5px rgba(0, 0, 0, 0.2);
 }
 
 .main-header {
   background-color: #6599FF;
   border-radius: 20px 20px 20px 20px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 5px rgba(0, 0, 0, 0.2);
   color: #FFF;
   display: flex;
   justify-content: center;
@@ -160,5 +159,5 @@ header {
   border: none;
   border-radius: 10px;
   padding: 10px 20px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 5px rgba(0, 0, 0, 0.2);
 }

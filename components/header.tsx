@@ -4,7 +4,7 @@ import Link from "next/link";
 
 function Header({ category, section }: { category: string; section: string }) {
     return (
-        <header className="flex bg-white pt-4 pb-4 px-24">
+        <header className="flex bg-white pt-2 pb-2 px-24">
             <div className="flex-1 flex items-center">
                 <figure>
                     <img src={nextConfig.basePath + "/img/logo.png"} alt="Logo" className="w-64 rounded-lg" />
