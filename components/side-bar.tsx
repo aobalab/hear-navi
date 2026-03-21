@@ -7,8 +7,8 @@ function SideBar({ category, section }: { category: string; section?: string }) 
     const sections = currentCategory?.sections ?? [];
     const categoryLabel = category === "record" ? "カルテ" : currentCategory?.label ?? "ヒアリング";
     const currentCategoryIcon = category === "record"
-        ? `${nextConfig.basePath}/img/カルテ_黄色.svg`
-        : `${nextConfig.basePath}/img/${categoryLabel}_黄色.png`;
+        ? `${nextConfig.basePath}/img/カルテ_青.svg`
+        : `${nextConfig.basePath}/img/${categoryLabel}_青.png`;
 
     return (
         <div className="main-side-bar p-4 col-span-3 flex flex-col gap-8">
