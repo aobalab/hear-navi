@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Baby, Briefcase, Users } from "lucide-react";
+import { IconCane } from "@tabler/icons-react";
+import { Baby, Briefcase } from "lucide-react";
 
 import { Field, FieldContent, FieldDescription } from "@/components/ui/field";
 import { cn } from "@/lib/utils";
@@ -134,7 +135,7 @@ export default function AgeQuestion() {
                         )}
                     >
                         <RadioGroupItem value="senior" id="age-senior" className="sr-only" />
-                        <Users className="size-12" aria-hidden="true" />
+                        <IconCane className="size-12" stroke={2} aria-hidden="true" />
                         <p className="text-lg font-semibold">シニア</p>
                     </label>
                 </RadioGroup>
