@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation";
 
 import { questionComponents } from "@/components/questions";
-import Summary from "@/components/summary";
 import { Categories } from '../../config';
 
 export function generateStaticParams() {
@@ -26,7 +25,6 @@ interface PageProps {
 export default async function Page({ params }: PageProps) {
     const { category, section } = await params;
     const currentCategory = Categories[category];
-    const shouldShowSummary = section === "ai";
 
     if (!currentCategory) {
         notFound();
@@ -49,7 +47,6 @@ export default async function Page({ params }: PageProps) {
             <div className="mt-8 mb-12">
                 <QuestionComponent />
             </div>
-            {shouldShowSummary ? <Summary /> : null}
         </div>
     </>);
 }

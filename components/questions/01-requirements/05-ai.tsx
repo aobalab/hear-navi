@@ -1,27 +1,44 @@
 "use client";
 
+import { useEffect, useState } from "react";
+
 import { Field, FieldContent, FieldDescription, FieldTitle } from "@/components/ui/field";
 import { Textarea } from "@/components/ui/textarea";
-import { useHearingAnswer } from "@/lib/use-hearing-answer";
+import { buildHearingSummary, HEARING_STORAGE_EVENT, readHearingAnswers } from "@/lib/hearing-storage";
 
 export default function AiQuestion() {
-    const [value, setValue] = useHearingAnswer("ai");
+    const [summary, setSummary] = useState("");
+
+    useEffect(() => {
+        const syncSummary = () => {
+            setSummary(buildHearingSummary(readHearingAnswers()));
+        };
+
+        syncSummary();
+        window.addEventListener("storage", syncSummary);
+        window.addEventListener(HEARING_STORAGE_EVENT, syncSummary);
+
+        return () => {
+            window.removeEventListener("storage", syncSummary);
+            window.removeEventListener(HEARING_STORAGE_EVENT, syncSummary);
+        };
+    }, []);
 
     return (
         <Field>
             <FieldContent>
-                <FieldTitle className="main-content-label mb-1 text-l font-bold">AI活用</FieldTitle>
+                <FieldTitle className="main-content-label mb-1 text-l font-bold">要約</FieldTitle>
                 <FieldDescription className="mb-3">
-                    AI をどの場面で使いたいか、期待していることがあれば記入してください。
+                    ここまでのヒアリング内容を確認できます。
                 </FieldDescription>
                 <Textarea
-                    value={value}
-                    onChange={(event) => setValue(event.target.value)}
-                    placeholder="例: FAQ の自動生成や、問い合わせ内容の要約に活用したいです。"
-                    className="min-h-[200px]"
-                    maxLength={400}
+                    id="textarea-message"
+                    className="min-h-[240px]"
+                    placeholder="各質問への回答がここに反映されます"
+                    value={summary}
+                    readOnly
                 />
-                <p className="text-right text-sm text-muted-foreground">{value.length}/400</p>
+                <p className="text-right text-sm text-muted-foreground">{summary.length}文字</p>
             </FieldContent>
         </Field>
     );
