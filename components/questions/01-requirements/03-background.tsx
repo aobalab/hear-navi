@@ -12,14 +12,17 @@ import { readHearingAnswers, writeHearingAnswer } from "@/lib/hearing-storage";
 export default function BackgroundQuestion() {
     const [backgroundType, setBackgroundType] = useState("");
     const [detail, setDetail] = useState("");
+    const [purpose, setPurpose] = useState("");
     const [isReady, setIsReady] = useState(false);
 
     useEffect(() => {
         const stored = readHearingAnswers().background ?? "";
-        const { values, remainder } = parseLabeledAnswer(stored, ["状況", "補足"]);
+        const storedPurpose = readHearingAnswers().purpose ?? "";
+        const { values, remainder } = parseLabeledAnswer(stored, ["状況", "補足", "目的"]);
 
         setBackgroundType(values["状況"] ?? "");
         setDetail(values["補足"] ?? remainder);
+        setPurpose(values["目的"] ?? storedPurpose);
         setIsReady(true);
     }, []);
 
@@ -33,15 +36,18 @@ export default function BackgroundQuestion() {
             formatLabeledAnswer([
                 ["状況", backgroundType],
                 ["補足", detail],
+                ["目的", purpose],
             ])
         );
-    }, [backgroundType, detail, isReady]);
+
+        writeHearingAnswer("purpose", "");
+    }, [backgroundType, detail, isReady, purpose]);
 
     return (
         <Field>
             <FieldContent>
                 <FieldDescription className="mb-3">
-                    現在の状況を選択し、背景や課題感があれば補足してください。
+                    現在の状況を選択し、背景や目的をまとめて入力してください。
                 </FieldDescription>
                 <RadioGroup value={backgroundType} onValueChange={setBackgroundType} className="gap-4">
                     <div className="flex items-center gap-3">
@@ -61,6 +67,17 @@ export default function BackgroundQuestion() {
                     maxLength={400}
                 />
                 <p className="text-right text-sm text-muted-foreground">{detail.length}/400</p>
+                <div className="pt-2">
+                    <p className="mb-2 text-sm font-medium text-foreground">目的</p>
+                    <Textarea
+                        value={purpose}
+                        onChange={(event) => setPurpose(event.target.value)}
+                        placeholder="例: 問い合わせ件数を増やしたい、採用応募数を増やしたい、会社の信頼性を高めたい。"
+                        className="min-h-[200px]"
+                        maxLength={400}
+                    />
+                    <p className="text-right text-sm text-muted-foreground">{purpose.length}/400</p>
+                </div>
             </FieldContent>
         </Field>
     );

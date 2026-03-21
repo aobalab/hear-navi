@@ -13,7 +13,6 @@ export const Categories: Record<string, {
             { title: "self-introduction", label: "自己紹介" },
             { title: "company-detail", label: "会社詳細" },
             { title: "background", label: "背景" },
-            { title: "purpose", label: "目的" },
             { title: "ai", label: "AI活用" },
         ]
     },

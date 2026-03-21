@@ -3,7 +3,6 @@ import type { ComponentType } from "react";
 import SelfIntroductionRequirementsQuestion from "@/components/questions/01-requirements/01-self-introduction";
 import CompanyDetailQuestion from "./01-requirements/02-company-detail";
 import BackgroundQuestion from "./01-requirements/03-background";
-import PurposeQuestion from "@/components/questions/01-requirements/04-purpose";
 import AiQuestion from "@/components/questions/01-requirements/05-ai";
 import UserTypeQuestion from "@/components/questions/02-target/01-user-type";
 import GenderQuestion from "@/components/questions/02-target/02-gender";
@@ -24,7 +23,6 @@ export const questionComponents: Record<string, Record<string, ComponentType>> =
         "self-introduction": SelfIntroductionRequirementsQuestion,
         background: BackgroundQuestion,
         "company-detail": CompanyDetailQuestion,
-        purpose: PurposeQuestion,
         ai: AiQuestion,
     },
     target: {
