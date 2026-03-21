@@ -162,32 +162,43 @@ export default function RecordPage() {
                         {Object.entries(Categories).map(([categoryKey, category]) => {
                             const categoryItems = items[categoryKey] ?? [];
                             const filledCount = categoryItems.filter((item) => item.isFilled).length;
+                            const isTargetCategory = categoryKey === "target";
 
                             return (
-                                <section key={categoryKey} className="rounded-2xl border border-border bg-white p-6 shadow-sm">
-                                    <div className="mb-4 flex items-center justify-between gap-4 border-b border-border pb-3">
+                                <section key={categoryKey} className={isTargetCategory ? "rounded-2xl border border-sky-200 bg-gradient-to-br from-sky-50 via-white to-cyan-50 p-6 shadow-sm" : "rounded-2xl border border-border bg-white p-6 shadow-sm"}>
+                                    <div className={isTargetCategory ? "mb-4 flex items-center justify-between gap-4 rounded-2xl bg-[#1C5D99] px-4 py-3 text-white" : "mb-4 flex items-center justify-between gap-4 border-b border-border pb-3"}>
                                         <div className="flex items-center gap-3">
-                                            <figure className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-50 p-2">
+                                            <figure className={isTargetCategory ? "flex h-10 w-10 items-center justify-center rounded-lg bg-white/15 p-2 backdrop-blur-sm" : "flex h-10 w-10 items-center justify-center rounded-lg bg-slate-50 p-2"}>
                                                 <img
                                                     src={nextConfig.basePath + `/img/${category.label}_青.png`}
                                                     alt={category.label}
                                                     className="max-h-full max-w-full object-contain"
                                                 />
                                             </figure>
-                                            <h2 className="text-lg font-semibold text-slate-900">{category.label}</h2>
+                                            <div>
+                                                <h2 className={isTargetCategory ? "text-lg font-semibold text-white" : "text-lg font-semibold text-slate-900"}>{category.label}</h2>
+                                                {isTargetCategory ? <p className="text-xs text-white/75">選択内容に応じたアイコン付きで確認できます</p> : null}
+                                            </div>
                                         </div>
-                                        <span className="text-xs text-muted-foreground">{filledCount}/{categoryItems.length}件</span>
+                                        <span className={isTargetCategory ? "rounded-full bg-white/15 px-3 py-1 text-xs text-white" : "text-xs text-muted-foreground"}>{filledCount}/{categoryItems.length}件</span>
                                     </div>
                                     <div className="space-y-4">
                                         {categoryItems.map((item) => (
-                                            <div key={item.key} className={item.isFilled ? "rounded-xl bg-slate-50 p-4" : "rounded-xl border border-dashed border-slate-200 bg-slate-50/40 p-4"}>
+                                            <div key={item.key} className={isTargetCategory
+                                                ? item.isFilled
+                                                    ? "rounded-2xl border border-sky-100 bg-white p-4 shadow-[0_10px_30px_rgba(28,93,153,0.08)]"
+                                                    : "rounded-2xl border border-dashed border-sky-200 bg-white/80 p-4"
+                                                : item.isFilled
+                                                    ? "rounded-xl bg-slate-50 p-4"
+                                                    : "rounded-xl border border-dashed border-slate-200 bg-slate-50/40 p-4"
+                                            }>
                                                 <div className="mb-2 flex items-center justify-between gap-4">
                                                     <div className="flex items-center gap-2">
                                                         {categoryKey === "target" ? getTargetCardIcon(item.key, answers) : null}
                                                         <div>
-                                                            <p className="text-sm font-medium text-slate-500">{item.label}</p>
+                                                            <p className={isTargetCategory ? "text-sm font-semibold text-slate-700" : "text-sm font-medium text-slate-500"}>{item.label}</p>
                                                             {categoryKey === "target" && item.key === "status" && item.isFilled && getTargetCardSummary(item.key, answers) ? (
-                                                                <p className="text-xs font-medium text-slate-400">
+                                                                <p className="text-xs font-medium text-sky-700/70">
                                                                     {getTargetCardSummary(item.key, answers)}
                                                                 </p>
                                                             ) : null}
