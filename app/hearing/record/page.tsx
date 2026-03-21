@@ -6,7 +6,7 @@ import { BadgeCent, Baby, Briefcase, BriefcaseBusiness, Building2, CalendarRange
 
 import { Categories } from "@/app/hearing/config";
 import { parseLabeledAnswer } from "@/lib/hearing-answer-format";
-import { buildHearingSummary, HEARING_STORAGE_EVENT, readHearingAnswers, type HearingAnswers } from "@/lib/hearing-storage";
+import { HEARING_STORAGE_EVENT, readHearingAnswers, type HearingAnswers } from "@/lib/hearing-storage";
 import nextConfig from "@/next.config";
 
 type RecordItem = {
@@ -411,15 +411,12 @@ export default function RecordPage() {
     useEffect(() => {
         const updateItems = () => {
             const answers = readHearingAnswers();
-            const aiSummary = buildHearingSummary(answers);
             setAnswers(answers);
 
             const nextItems = Object.entries(Categories).reduce<Record<string, RecordItem[]>>((accumulator, [categoryKey, category]) => {
                 const categoryItems = category.sections
                     .map((section) => {
-                        const sectionValue = section.title === "ai"
-                            ? aiSummary
-                            : answers[section.title] ?? "";
+                        const sectionValue = answers[section.title] ?? "";
                         const normalizedValue = normalizeAnswer(sectionValue);
 
                         return {

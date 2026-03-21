@@ -55,24 +55,3 @@ export function writeHearingAnswer(section: string, value: string) {
     window.sessionStorage.setItem(HEARING_STORAGE_KEY, JSON.stringify(nextAnswers));
     window.dispatchEvent(new CustomEvent(HEARING_STORAGE_EVENT));
 }
-
-export function buildHearingSummary(answers: HearingAnswers) {
-    const sectionLabelMap = getSectionLabelMap();
-
-    const orderedSections = Object.values(Categories).flatMap((category) =>
-        category.sections.map((section) => section.title)
-    );
-
-    return orderedSections
-        .filter((section) => (answers[section] ?? "").trim().length > 0)
-        .map((section) => {
-            const normalizedValue = answers[section]
-                .split("\n")
-                .map((line) => line.trim())
-                .filter((line) => line.length > 0)
-                .join(" / ");
-
-            return `${sectionLabelMap[section] ?? section}: ${normalizedValue}`;
-        })
-        .join("\n");
-}
