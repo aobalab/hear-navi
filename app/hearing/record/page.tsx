@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Baby, Briefcase, Building2, CircleOff, Mars, UserRound, Users, Venus } from "lucide-react";
+import { BadgeCent, Baby, Briefcase, BriefcaseBusiness, Building2, CalendarRange, CircleOff, Mars, Newspaper, Search, ShoppingCart, UserRound, Users, Venus } from "lucide-react";
 
 import { Categories } from "@/app/hearing/config";
 import { parseLabeledAnswer } from "@/lib/hearing-answer-format";
@@ -18,12 +18,193 @@ type RecordItem = {
     isFilled: boolean;
 };
 
+const weekLabels = ["日", "月", "火", "水", "木", "金", "土"];
+
 function normalizeAnswer(value: string) {
     return value
         .split("\n")
         .map((line) => line.trim())
         .filter((line) => line.length > 0)
         .join(" / ");
+}
+
+function parseListAnswer(value: string) {
+    return value
+        .split("\n")
+        .map((line) => line.trim())
+        .filter((line) => line.length > 0);
+}
+
+function formatDisplayDate(dateValue: string) {
+    if (!dateValue) {
+        return "";
+    }
+
+    const [year, month, day] = dateValue.split("-");
+    return `${year}年${Number(month)}月${Number(day)}日`;
+}
+
+function buildCalendarDays(displayYear: number, displayMonth: number) {
+    const firstDay = new Date(displayYear, displayMonth, 1);
+    const firstWeekday = firstDay.getDay();
+    const daysInMonth = new Date(displayYear, displayMonth + 1, 0).getDate();
+    const days: Array<{ day: number; dateValue: string; weekday: number } | null> = [];
+
+    for (let index = 0; index < firstWeekday; index += 1) {
+        days.push(null);
+    }
+
+    for (let day = 1; day <= daysInMonth; day += 1) {
+        days.push({
+            day,
+            dateValue: `${displayYear}-${String(displayMonth + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`,
+            weekday: new Date(displayYear, displayMonth, day).getDay(),
+        });
+    }
+
+    while (days.length % 7 !== 0) {
+        days.push(null);
+    }
+
+    return days;
+}
+
+function getScheduleRecordData(rawValue: string) {
+    const parsed = parseLabeledAnswer(rawValue, ["希望時期", "開始日", "終了日", "希望日", "公開希望月", "補足"]);
+    const legacyDate = parsed.values["希望日"] ?? parsed.values["公開希望月"] ?? "";
+    const startDate = parsed.values["開始日"] ?? legacyDate;
+    const endDate = parsed.values["終了日"] ?? legacyDate;
+    const memo = parsed.values["補足"] ?? parsed.remainder;
+    const timeline = parsed.values["希望時期"] ?? "";
+
+    return { startDate, endDate, memo, timeline };
+}
+
+function getMonthsInRange(startDate: string, endDate: string) {
+    if (!startDate) {
+        return [] as Array<{ year: number; month: number }>;
+    }
+
+    const [startYear, startMonth] = startDate.split("-").map(Number);
+    const [endYear, endMonth] = (endDate || startDate).split("-").map(Number);
+    const months: Array<{ year: number; month: number }> = [];
+    let currentYear = startYear;
+    let currentMonth = startMonth - 1;
+    const targetKey = endYear * 12 + (endMonth - 1);
+
+    while (currentYear * 12 + currentMonth <= targetKey) {
+        months.push({ year: currentYear, month: currentMonth });
+        currentMonth += 1;
+
+        if (currentMonth > 11) {
+            currentMonth = 0;
+            currentYear += 1;
+        }
+    }
+
+    return months;
+}
+
+function isDateInRange(dateValue: string, startDate: string, endDate: string) {
+    if (!startDate) {
+        return false;
+    }
+
+    if (!endDate) {
+        return dateValue === startDate;
+    }
+
+    return dateValue >= startDate && dateValue <= endDate;
+}
+
+function isRangeEdge(dateValue: string, startDate: string, endDate: string) {
+    return dateValue === startDate || dateValue === endDate;
+}
+
+function ScheduleCalendarCard({ rawValue }: { rawValue: string }) {
+    const { startDate, endDate, memo, timeline } = getScheduleRecordData(rawValue);
+    const months = getMonthsInRange(startDate, endDate);
+
+    if (!startDate) {
+        return <p className="text-sm leading-7 text-muted-foreground">{memo || "まだ入力されていません。"}</p>;
+    }
+
+    return (
+        <div className="space-y-4">
+            <div className="flex flex-wrap items-center gap-2 text-sm">
+                {timeline ? <span className="rounded-full bg-sky-50 px-3 py-1 font-medium text-sky-700">{timeline}</span> : null}
+                <span className="text-slate-700">
+                    {formatDisplayDate(startDate)}{endDate ? ` 〜 ${formatDisplayDate(endDate)}` : ""}
+                </span>
+            </div>
+            <div className="grid gap-3 xl:grid-cols-2">
+                {months.map(({ year, month }) => {
+                    const calendarDays = buildCalendarDays(year, month);
+
+                    return (
+                        <div key={`${year}-${month}`} className="rounded-xl border border-slate-200 bg-white p-3">
+                            <p className="mb-3 text-center text-sm font-semibold text-slate-800">{year}年 {month + 1}月</p>
+                            <div className="grid grid-cols-7 gap-1 text-center text-[11px] font-medium text-slate-400">
+                                {weekLabels.map((label, index) => (
+                                    <div
+                                        key={`${year}-${month}-${label}`}
+                                        className={index === 0 ? "text-red-500" : index === 6 ? "text-blue-500" : ""}
+                                    >
+                                        {label}
+                                    </div>
+                                ))}
+                            </div>
+                            <div className="mt-2 grid grid-cols-7 gap-1">
+                                {calendarDays.map((entry, index) => {
+                                    if (!entry) {
+                                        return <div key={`${year}-${month}-empty-${index}`} className="h-8" />;
+                                    }
+
+                                    const inRange = isDateInRange(entry.dateValue, startDate, endDate);
+                                    const edge = isRangeEdge(entry.dateValue, startDate, endDate);
+
+                                    return (
+                                        <div
+                                            key={entry.dateValue}
+                                            className={[
+                                                "flex h-8 items-center justify-center rounded-md text-xs",
+                                                entry.weekday === 0 && !inRange ? "text-red-500" : "",
+                                                entry.weekday === 6 && !inRange ? "text-blue-500" : "",
+                                                inRange ? "bg-sky-100 text-sky-800" : "",
+                                                edge ? "border border-[#1C5D99] bg-amber-300 font-bold text-slate-900 shadow-sm" : "",
+                                            ].filter(Boolean).join(" ")}
+                                        >
+                                            {entry.day}
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    );
+                })}
+            </div>
+            {memo ? <p className="text-sm leading-7 text-slate-900">{memo}</p> : null}
+        </div>
+    );
+}
+
+function FunctionListCard({ rawValue, isFilled }: { rawValue: string; isFilled: boolean }) {
+    const items = parseListAnswer(rawValue);
+
+    if (!isFilled || items.length === 0) {
+        return <p className="text-sm leading-7 text-muted-foreground">まだ入力されていません。</p>;
+    }
+
+    return (
+        <ul className="space-y-2">
+            {items.map((item) => (
+                <li key={item} className="flex items-start gap-3 text-sm leading-7 text-slate-900">
+                    <span className="mt-2 h-2 w-2 rounded-full bg-[#1C5D99]" />
+                    <span>{item}</span>
+                </li>
+            ))}
+        </ul>
+    );
 }
 
 function getTargetCardIcon(itemKey: string, answers: HearingAnswers) {
@@ -106,6 +287,76 @@ function getTargetCardSummary(itemKey: string, answers: HearingAnswers) {
     const ageDetail = age.values["年代"] ?? age.values["中心年齢層"] ?? age.remainder;
 
     return [genderType, ageDetail].filter((value) => value.length > 0).join(" / ");
+}
+
+function getFunctionCardIcon(itemKey: string, answers: HearingAnswers) {
+    if (itemKey !== "site-category") {
+        return null;
+    }
+
+    const siteCategory = parseLabeledAnswer(answers["site-category"] ?? "", ["種類"]);
+    const siteCategoryValue = siteCategory.values["種類"] ?? siteCategory.remainder;
+
+    if (siteCategoryValue === "コーポレートサイト") {
+        return <BriefcaseBusiness className="size-5 text-[#1C5D99]" aria-hidden="true" />;
+    }
+
+    if (siteCategoryValue === "ECサイト") {
+        return <ShoppingCart className="size-5 text-emerald-600" aria-hidden="true" />;
+    }
+
+    if (siteCategoryValue === "メディアサイト") {
+        return <Newspaper className="size-5 text-orange-500" aria-hidden="true" />;
+    }
+
+    if (siteCategoryValue === "ブランドサイト") {
+        return <BadgeCent className="size-5 text-rose-500" aria-hidden="true" />;
+    }
+
+    if (siteCategoryValue === "LP・イベントサイト") {
+        return <CalendarRange className="size-5 text-violet-600" aria-hidden="true" />;
+    }
+
+    if (siteCategoryValue === "採用サイト") {
+        return <Search className="size-5 text-sky-600" aria-hidden="true" />;
+    }
+
+    return null;
+}
+
+function getFunctionCardSummary(itemKey: string, answers: HearingAnswers) {
+    if (itemKey !== "site-category") {
+        return "";
+    }
+
+    const siteCategory = parseLabeledAnswer(answers["site-category"] ?? "", ["種類"]);
+    const siteCategoryValue = siteCategory.values["種類"] ?? siteCategory.remainder;
+
+    if (siteCategoryValue === "コーポレートサイト") {
+        return "会社を知って欲しい";
+    }
+
+    if (siteCategoryValue === "ECサイト") {
+        return "商品を売りたい";
+    }
+
+    if (siteCategoryValue === "メディアサイト") {
+        return "記事を読んで欲しい";
+    }
+
+    if (siteCategoryValue === "ブランドサイト") {
+        return "魅力を伝えたい";
+    }
+
+    if (siteCategoryValue === "LP・イベントサイト") {
+        return "キャンペーンを伝えたい";
+    }
+
+    if (siteCategoryValue === "採用サイト") {
+        return "新しく人を雇いたい";
+    }
+
+    return "";
 }
 
 export default function RecordPage() {
@@ -193,13 +444,23 @@ export default function RecordPage() {
                                                     : "rounded-xl border border-dashed border-slate-200 bg-slate-50/40 p-4"
                                             }>
                                                 <div className="mb-2 flex items-center justify-between gap-4">
-                                                    <div className="flex items-center gap-2">
+                                                    <div className={categoryKey === "function" && item.key === "site-category" ? "flex items-center gap-4" : "flex items-center gap-2"}>
                                                         {categoryKey === "target" ? getTargetCardIcon(item.key, answers) : null}
+                                                        {categoryKey === "function" && item.key === "site-category" ? (
+                                                            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white shadow-sm">
+                                                                {getFunctionCardIcon(item.key, answers) ? <div className="[&_svg]:size-7">{getFunctionCardIcon(item.key, answers)}</div> : null}
+                                                            </div>
+                                                        ) : categoryKey === "function" ? getFunctionCardIcon(item.key, answers) : null}
                                                         <div>
                                                             <p className={isTargetCategory ? "text-sm font-semibold text-slate-700" : "text-sm font-medium text-slate-500"}>{item.label}</p>
                                                             {categoryKey === "target" && item.key === "status" && item.isFilled && getTargetCardSummary(item.key, answers) ? (
                                                                 <p className="text-xs font-medium text-sky-700/70">
                                                                     {getTargetCardSummary(item.key, answers)}
+                                                                </p>
+                                                            ) : null}
+                                                            {categoryKey === "function" && item.key === "site-category" && item.isFilled && getFunctionCardSummary(item.key, answers) ? (
+                                                                <p className="text-sm font-semibold text-slate-700">
+                                                                    {getFunctionCardSummary(item.key, answers)}
                                                                 </p>
                                                             ) : null}
                                                         </div>
@@ -214,9 +475,15 @@ export default function RecordPage() {
                                                         {item.isFilled ? "編集する" : "入力する"}
                                                     </Link>
                                                 </div>
-                                                <p className={item.isFilled ? "whitespace-pre-wrap text-sm leading-7 text-slate-900" : "text-sm leading-7 text-muted-foreground"}>
-                                                    {item.isFilled ? item.value : "まだ入力されていません。"}
-                                                </p>
+                                                {categoryKey === "proposal" && item.key === "schedule" ? (
+                                                    <ScheduleCalendarCard rawValue={item.rawValue} />
+                                                ) : categoryKey === "function" && (item.key === "site-page" || item.key === "site-function") ? (
+                                                    <FunctionListCard rawValue={item.rawValue} isFilled={item.isFilled} />
+                                                ) : (
+                                                    <p className={item.isFilled ? "whitespace-pre-wrap text-sm leading-7 text-slate-900" : "text-sm leading-7 text-muted-foreground"}>
+                                                        {item.isFilled ? item.value : "まだ入力されていません。"}
+                                                    </p>
+                                                )}
                                             </div>
                                         ))}
                                     </div>
