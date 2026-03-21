@@ -196,7 +196,7 @@ function FunctionListCard({ rawValue, isFilled }: { rawValue: string; isFilled: 
     }
 
     return (
-        <ul className="space-y-2">
+        <ul className="grid gap-x-6 gap-y-2 md:grid-cols-2">
             {items.map((item) => (
                 <li key={item} className="flex items-start gap-3 text-sm leading-7 text-slate-900">
                     <span className="mt-2 h-2 w-2 rounded-full bg-[#1C5D99]" />
