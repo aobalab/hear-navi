@@ -466,9 +466,10 @@ export default function RecordPage() {
                             const categoryItems = items[categoryKey] ?? [];
                             const filledCount = categoryItems.filter((item) => item.isFilled).length;
                             const categoryHref = `/hearing/${categoryKey}/${category.sections[0].title}`;
+                            const isRequirementsCategory = categoryKey === "requirements";
 
                             return (
-                                <section key={categoryKey} className="rounded-2xl border border-border bg-white p-6 shadow-sm">
+                                <section key={categoryKey} className={isRequirementsCategory ? "rounded-2xl border border-border bg-white p-6 shadow-sm xl:col-span-2" : "rounded-2xl border border-border bg-white p-6 shadow-sm"}>
                                     <div className="mb-4 flex items-center justify-between gap-4 border-b border-border pb-3">
                                         <div className="flex items-center gap-3">
                                             <figure className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-50 p-2">
@@ -482,13 +483,15 @@ export default function RecordPage() {
                                                 <h2 className="text-lg font-semibold text-slate-900">{category.label}</h2>
                                             </div>
                                         </div>
-                                        <div className="flex items-center gap-3">
-                                            <span className="text-xs text-muted-foreground">{filledCount}/{categoryItems.length}件</span>
+                                        <div className="flex flex-wrap items-center justify-end gap-2">
+                                            <span className="rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-medium text-slate-500">
+                                                {filledCount}/{categoryItems.length}件
+                                            </span>
                                             <Link
                                                 href={categoryHref}
                                                 className={filledCount > 0
-                                                    ? "inline-flex items-center rounded-full bg-[#6599FF] px-4 py-1.5 text-sm font-medium text-white transition-opacity hover:opacity-85"
-                                                    : "inline-flex items-center rounded-full border border-[#6599FF] px-4 py-1.5 text-sm font-medium text-[#6599FF] transition-colors hover:bg-[#6599FF]/5"
+                                                    ? "inline-flex items-center rounded-full bg-[#6599FF] px-3 py-1.5 text-xs font-medium text-white transition-opacity hover:opacity-85"
+                                                    : "inline-flex items-center rounded-full border border-[#6599FF] px-3 py-1.5 text-xs font-medium text-[#6599FF] transition-colors hover:bg-[#6599FF]/5"
                                                 }
                                             >
                                                 {filledCount > 0 ? "編集する" : "入力する"}
