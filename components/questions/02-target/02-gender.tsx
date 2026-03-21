@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { CircleOff, Mars, Venus } from "lucide-react";
 
-import { Field, FieldContent, FieldDescription, FieldTitle } from "@/components/ui/field";
+import { Field, FieldContent, FieldDescription } from "@/components/ui/field";
 import { cn } from "@/lib/utils";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { formatLabeledAnswer, parseLabeledAnswer } from "@/lib/hearing-answer-format";
@@ -37,7 +37,6 @@ export default function GenderQuestion() {
     return (
         <Field>
             <FieldContent>
-                <FieldTitle className="main-content-label mb-1 text-l font-bold">個人 性別</FieldTitle>
                 <FieldDescription className="mb-3">
                     ターゲットの性別傾向を選択してください。
                 </FieldDescription>

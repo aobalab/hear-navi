@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import { Field, FieldContent, FieldDescription, FieldTitle } from "@/components/ui/field";
+import { Field, FieldContent, FieldDescription } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { formatLabeledAnswer, parseLabeledAnswer } from "@/lib/hearing-answer-format";
@@ -51,9 +51,6 @@ export default function SelfIntroductionQuestion() {
     return (
         <Field>
             <FieldContent>
-                <FieldTitle className="main-content-label mb-1 text-l font-bold">
-                    自己紹介
-                </FieldTitle>
                 <FieldDescription className="mb-3">
                     お名前、フリガナ、会社名、職業を入力してください。
                 </FieldDescription>

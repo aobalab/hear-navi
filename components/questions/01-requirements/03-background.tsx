@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import { Field, FieldContent, FieldDescription, FieldTitle } from "@/components/ui/field";
+import { Field, FieldContent, FieldDescription } from "@/components/ui/field";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Textarea } from "@/components/ui/textarea";
@@ -40,7 +40,6 @@ export default function BackgroundQuestion() {
     return (
         <Field>
             <FieldContent>
-                <FieldTitle className="main-content-label mb-1 text-l font-bold">背景</FieldTitle>
                 <FieldDescription className="mb-3">
                     現在の状況を選択し、背景や課題感があれば補足してください。
                 </FieldDescription>

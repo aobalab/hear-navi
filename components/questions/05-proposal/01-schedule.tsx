@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-import { Field, FieldContent, FieldDescription, FieldTitle } from "@/components/ui/field";
+import { Field, FieldContent, FieldDescription } from "@/components/ui/field";
 import { cn } from "@/lib/utils";
 import {
     Select,
@@ -210,7 +210,6 @@ export default function ScheduleQuestion() {
     return (
         <Field>
             <FieldContent>
-                <FieldTitle className="main-content-label mb-1 text-l font-bold">スケジュール</FieldTitle>
                 <FieldDescription className="mb-3">
                     左側で希望時期と期間を選択し、右側に補足メモを記入してください。
                 </FieldDescription>

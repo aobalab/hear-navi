@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import { Field, FieldContent, FieldDescription, FieldTitle } from "@/components/ui/field";
+import { Field, FieldContent, FieldDescription } from "@/components/ui/field";
 import { cn } from "@/lib/utils";
 import { parseLabeledAnswer } from "@/lib/hearing-answer-format";
 import { readHearingAnswers, writeHearingAnswer } from "@/lib/hearing-storage";
@@ -60,7 +60,6 @@ export default function SitePageQuestion() {
     return (
         <Field>
             <FieldContent>
-                <FieldTitle className="main-content-label mb-1 text-l font-bold">サイトページ</FieldTitle>
                 <FieldDescription className="mb-3">
                     特に見てほしいページの方向性を複数選択してください。
                 </FieldDescription>

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Baby, Briefcase, CircleOff, Mars, Users, Venus } from "lucide-react";
 
-import { Field, FieldContent, FieldDescription, FieldTitle } from "@/components/ui/field";
+import { Field, FieldContent, FieldDescription } from "@/components/ui/field";
 import { Textarea } from "@/components/ui/textarea";
 import { parseLabeledAnswer } from "@/lib/hearing-answer-format";
 import { HEARING_STORAGE_EVENT, readHearingAnswers, writeHearingAnswer } from "@/lib/hearing-storage";
@@ -85,7 +85,6 @@ export default function StatusQuestion() {
     return (
         <Field>
             <FieldContent>
-                <FieldTitle className="main-content-label mb-1 text-l font-bold">個人 属性</FieldTitle>
                 <FieldDescription className="mb-3">
                     性別と年齢の選択結果を確認しながら、補足メモを残してください。
                 </FieldDescription>

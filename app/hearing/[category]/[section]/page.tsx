@@ -40,7 +40,7 @@ export default async function Page({ params }: PageProps) {
     return (<>
         <div className="absolute main-header -top-4 left-8 pl-4 pr-4 pt-2 pb-2">
             <p className="main-header-subtitle text-md">
-                {currentCategory.label}
+                {currentSection.label}
             </p>
         </div>
         <div className="main-content p-8">

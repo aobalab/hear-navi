@@ -1,6 +1,6 @@
 "use client";
 
-import { Field, FieldContent, FieldDescription, FieldTitle } from "@/components/ui/field";
+import { Field, FieldContent, FieldDescription } from "@/components/ui/field";
 import { Textarea } from "@/components/ui/textarea";
 import { useHearingAnswer } from "@/lib/use-hearing-answer";
 
@@ -10,7 +10,6 @@ export default function CompanyDetailQuestion() {
     return (
         <Field>
             <FieldContent>
-                <FieldTitle className="main-content-label mb-1 text-l font-bold">会社詳細</FieldTitle>
                 <FieldDescription className="mb-3">
                     会社概要、サービス内容、強みなどサイトに載せたい情報を記入してください。
                 </FieldDescription>

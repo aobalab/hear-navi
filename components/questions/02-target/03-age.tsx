@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Baby, Briefcase, Users } from "lucide-react";
 
-import { Field, FieldContent, FieldDescription, FieldTitle } from "@/components/ui/field";
+import { Field, FieldContent, FieldDescription } from "@/components/ui/field";
 import { cn } from "@/lib/utils";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
@@ -100,7 +100,6 @@ export default function AgeQuestion() {
     return (
         <Field>
             <FieldContent>
-                <FieldTitle className="main-content-label mb-1 text-l font-bold">個人 年齢</FieldTitle>
                 <FieldDescription className="mb-3">
                     まず大まかな区分を選び、そのあと具体的な年代を選択してください。
                 </FieldDescription>

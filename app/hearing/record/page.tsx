@@ -6,7 +6,7 @@ import { BadgeCent, Baby, Briefcase, BriefcaseBusiness, Building2, CalendarRange
 
 import { Categories } from "@/app/hearing/config";
 import { parseLabeledAnswer } from "@/lib/hearing-answer-format";
-import { HEARING_STORAGE_EVENT, readHearingAnswers, type HearingAnswers } from "@/lib/hearing-storage";
+import { buildHearingSummary, HEARING_STORAGE_EVENT, readHearingAnswers, type HearingAnswers } from "@/lib/hearing-storage";
 import nextConfig from "@/next.config";
 
 type RecordItem = {
@@ -207,6 +207,52 @@ function FunctionListCard({ rawValue, isFilled }: { rawValue: string; isFilled: 
     );
 }
 
+function AbstractBarChartCard({ rawValue, isFilled }: { rawValue: string; isFilled: boolean }) {
+    const parsed = parseLabeledAnswer(rawValue, [
+        "柔らかい/硬い",
+        "あたたかい/つめたい",
+        "軽い/重い",
+        "なめらか/尖っている",
+    ]);
+
+    const chartItems = [
+        { label: "柔らかい/硬い", left: "柔らかい", right: "硬い", value: Number(parsed.values["柔らかい/硬い"] ?? "") },
+        { label: "あたたかい/つめたい", left: "あたたかい", right: "つめたい", value: Number(parsed.values["あたたかい/つめたい"] ?? "") },
+        { label: "軽い/重い", left: "軽い", right: "重い", value: Number(parsed.values["軽い/重い"] ?? "") },
+        { label: "なめらか/尖っている", left: "なめらか", right: "尖っている", value: Number(parsed.values["なめらか/尖っている"] ?? "") },
+    ].filter((item) => !Number.isNaN(item.value));
+
+    if (!isFilled || chartItems.length === 0) {
+        return <p className="text-sm leading-7 text-muted-foreground">まだ入力されていません。</p>;
+    }
+
+    return (
+        <div className="space-y-4">
+            {chartItems.map((item) => (
+                <div key={item.label} className="space-y-2">
+                    <div className="flex items-center justify-between gap-4 text-sm">
+                        <span className="font-medium text-slate-700">{item.left}</span>
+                        <span className="text-xs font-semibold text-slate-400">{item.label}</span>
+                        <span className="font-medium text-slate-700">{item.right}</span>
+                    </div>
+                    <div className="relative h-4 rounded-full bg-slate-200">
+                        <div className="absolute left-1/2 top-1/2 h-6 w-px -translate-y-1/2 bg-slate-400" />
+                        <div
+                            className="h-4 rounded-full bg-gradient-to-r from-sky-300 via-[#1C5D99] to-slate-700"
+                            style={{ width: `${item.value}%` }}
+                        />
+                        <div
+                            className="absolute top-1/2 h-5 w-5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white bg-[#1C5D99] shadow-sm"
+                            style={{ left: `${item.value}%` }}
+                        />
+                    </div>
+                    <div className="text-right text-xs font-medium text-[#1C5D99]">{item.value}</div>
+                </div>
+            ))}
+        </div>
+    );
+}
+
 function getTargetCardIcon(itemKey: string, answers: HearingAnswers) {
     if (itemKey === "user-type") {
         const userType = parseLabeledAnswer(answers["user-type"] ?? "", ["対象"]);
@@ -366,18 +412,26 @@ export default function RecordPage() {
     useEffect(() => {
         const updateItems = () => {
             const answers = readHearingAnswers();
+            const aiSummary = buildHearingSummary(answers);
             setAnswers(answers);
 
             const nextItems = Object.entries(Categories).reduce<Record<string, RecordItem[]>>((accumulator, [categoryKey, category]) => {
                 const categoryItems = category.sections
-                    .map((section) => ({
-                        key: section.title,
-                        label: section.label,
-                        value: normalizeAnswer(answers[section.title] ?? ""),
-                        rawValue: answers[section.title] ?? "",
-                        href: `/hearing/${categoryKey}/${section.title}`,
-                        isFilled: normalizeAnswer(answers[section.title] ?? "").length > 0,
-                    }));
+                    .map((section) => {
+                        const sectionValue = section.title === "ai"
+                            ? aiSummary
+                            : answers[section.title] ?? "";
+                        const normalizedValue = normalizeAnswer(sectionValue);
+
+                        return {
+                            key: section.title,
+                            label: section.label,
+                            value: normalizedValue,
+                            rawValue: sectionValue,
+                            href: `/hearing/${categoryKey}/${section.title}`,
+                            isFilled: normalizedValue.length > 0,
+                        };
+                    });
 
                 accumulator[categoryKey] = categoryItems;
                 return accumulator;
@@ -459,8 +513,8 @@ export default function RecordPage() {
                                                     <Link
                                                         href={item.href}
                                                         className={item.isFilled
-                                                            ? "inline-flex items-center rounded-full bg-[#1C5D99] px-4 py-1.5 text-sm font-medium text-white transition-opacity hover:opacity-85"
-                                                            : "inline-flex items-center rounded-full border border-[#1C5D99] px-4 py-1.5 text-sm font-medium text-[#1C5D99] transition-colors hover:bg-[#1C5D99]/5"
+                                                            ? "inline-flex items-center rounded-full bg-[#6599FF] px-4 py-1.5 text-sm font-medium text-white transition-opacity hover:opacity-85"
+                                                            : "inline-flex items-center rounded-full border border-[#6599FF] px-4 py-1.5 text-sm font-medium text-[#6599FF] transition-colors hover:bg-[#6599FF]/5"
                                                         }
                                                     >
                                                         {item.isFilled ? "編集する" : "入力する"}
@@ -468,6 +522,8 @@ export default function RecordPage() {
                                                 </div>
                                                 {categoryKey === "proposal" && item.key === "schedule" ? (
                                                     <ScheduleCalendarCard rawValue={item.rawValue} />
+                                                ) : categoryKey === "image" && item.key === "abstract" ? (
+                                                    <AbstractBarChartCard rawValue={item.rawValue} isFilled={item.isFilled} />
                                                 ) : categoryKey === "function" && (item.key === "site-page" || item.key === "site-function") ? (
                                                     <FunctionListCard rawValue={item.rawValue} isFilled={item.isFilled} />
                                                 ) : (

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import { Field, FieldContent, FieldDescription, FieldTitle } from "@/components/ui/field";
+import { Field, FieldContent, FieldDescription } from "@/components/ui/field";
 import { cn } from "@/lib/utils";
 import { readHearingAnswers, writeHearingAnswer } from "@/lib/hearing-storage";
 
@@ -63,7 +63,6 @@ export default function Impression3Question() {
     return (
         <Field>
             <FieldContent>
-                <FieldTitle className="main-content-label mb-1 text-l font-bold">印象3</FieldTitle>
                 <FieldDescription className="mb-3">
                     イメージに近い単語を 4 つまで選択してください。
                 </FieldDescription>

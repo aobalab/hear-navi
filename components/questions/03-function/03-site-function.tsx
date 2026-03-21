@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import { Field, FieldContent, FieldDescription, FieldTitle } from "@/components/ui/field";
+import { Field, FieldContent, FieldDescription } from "@/components/ui/field";
 import { cn } from "@/lib/utils";
 import { parseLabeledAnswer } from "@/lib/hearing-answer-format";
 import { readHearingAnswers, writeHearingAnswer } from "@/lib/hearing-storage";
@@ -60,7 +60,6 @@ export default function SiteFunctionQuestion() {
     return (
         <Field>
             <FieldContent>
-                <FieldTitle className="main-content-label mb-1 text-l font-bold">サイト機能</FieldTitle>
                 <FieldDescription className="mb-3">
                     特に期待する機能や役割を複数選択してください。
                 </FieldDescription>

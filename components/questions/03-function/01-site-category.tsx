@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { BadgeCent, BriefcaseBusiness, CalendarRange, Newspaper, Search, ShoppingCart } from "lucide-react";
 
-import { Field, FieldContent, FieldDescription, FieldTitle } from "@/components/ui/field";
+import { Field, FieldContent, FieldDescription } from "@/components/ui/field";
 import { cn } from "@/lib/utils";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { formatLabeledAnswer, parseLabeledAnswer } from "@/lib/hearing-answer-format";
@@ -76,7 +76,6 @@ export default function SiteCategoryQuestion() {
     return (
         <Field>
             <FieldContent>
-                <FieldTitle className="main-content-label mb-1 text-l font-bold">サイト種類</FieldTitle>
                 <FieldDescription className="mb-3">
                     想定しているサイト種類を 1 つ選択してください。
                 </FieldDescription>

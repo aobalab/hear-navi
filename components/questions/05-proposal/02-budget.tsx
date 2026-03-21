@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import { Field, FieldContent, FieldDescription, FieldTitle } from "@/components/ui/field";
+import { Field, FieldContent, FieldDescription } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import {
     Select,
@@ -49,7 +49,6 @@ export default function BudgetQuestion() {
     return (
         <Field>
             <FieldContent>
-                <FieldTitle className="main-content-label mb-1 text-l font-bold">予算</FieldTitle>
                 <FieldDescription className="mb-3">
                     予算帯を選択し、決まっている金額や条件があれば補足してください。
                 </FieldDescription>

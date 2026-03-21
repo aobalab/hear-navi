@@ -1,6 +1,6 @@
 "use client";
 
-import { Field, FieldContent, FieldDescription, FieldTitle } from "@/components/ui/field";
+import { Field, FieldContent, FieldDescription } from "@/components/ui/field";
 import { Textarea } from "@/components/ui/textarea";
 import { useHearingAnswer } from "@/lib/use-hearing-answer";
 
@@ -10,7 +10,6 @@ export default function PurposeQuestion() {
     return (
         <Field>
             <FieldContent>
-                <FieldTitle className="main-content-label mb-1 text-l font-bold">目的</FieldTitle>
                 <FieldDescription className="mb-3">
                     サイトを通じて達成したい目的を具体的に記入してください。
                 </FieldDescription>
