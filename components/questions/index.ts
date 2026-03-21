@@ -1,41 +1,53 @@
 import type { ComponentType } from "react";
 
-import AbstractQuestion from "@/components/questions/abstract";
-import AgeQuestion from "@/components/questions/age";
-import AiQuestion from "@/components/questions/ai";
-import BackgroundQuestion from "@/components/questions/background";
-import BudgetQuestion from "@/components/questions/budget";
-import CompanyDetailQuestion from "@/components/questions/company-detail";
-import GenderQuestion from "@/components/questions/gender";
-import Impression1Question from "@/components/questions/impression1";
-import Impression2Question from "@/components/questions/impression2";
-import Impression3Question from "@/components/questions/impression3";
-import PurposeQuestion from "@/components/questions/purpose";
-import ScheduleQuestion from "@/components/questions/schedule";
-import SelfIntroductionQuestion from "@/components/questions/self-introduction";
-import SiteCategoryQuestion from "@/components/questions/site-category";
-import SiteFunctionQuestion from "@/components/questions/site-function";
-import SitePageQuestion from "@/components/questions/site-page";
-import StatusQuestion from "@/components/questions/status";
-import UserTypeQuestion from "@/components/questions/user-type";
+import SelfIntroductionRequirementsQuestion from "@/components/questions/01-requirements/01-self-introduction";
+import CompanyDetailQuestion from "./01-requirements/02-company-detail";
+import BackgroundQuestion from "./01-requirements/03-background";
+import PurposeQuestion from "@/components/questions/01-requirements/04-purpose";
+import AiQuestion from "@/components/questions/01-requirements/05-ai";
+import UserTypeQuestion from "@/components/questions/02-target/01-user-type";
+import GenderQuestion from "@/components/questions/02-target/02-gender";
+import AgeQuestion from "@/components/questions/02-target/03-age";
+import StatusQuestion from "@/components/questions/02-target/04-status";
+import SelfIntroductionFunctionQuestion from "@/components/questions/03-function/01-self-introduction";
+import SiteCategoryQuestion from "@/components/questions/03-function/02-site-category";
+import SitePageQuestion from "@/components/questions/03-function/03-site-page";
+import SiteFunctionQuestion from "@/components/questions/03-function/04-site-function";
+import AbstractQuestion from "@/components/questions/04-image/01-abstract";
+import Impression1Question from "@/components/questions/04-image/02-impression1";
+import Impression2Question from "@/components/questions/04-image/03-impression2";
+import Impression3Question from "@/components/questions/04-image/04-impression3";
+import ScheduleQuestion from "@/components/questions/05-proposal/01-schedule";
+import BudgetQuestion from "@/components/questions/05-proposal/02-budget";
 
-export const questionComponents: Record<string, ComponentType> = {
-    abstract: AbstractQuestion,
-    age: AgeQuestion,
-    ai: AiQuestion,
-    background: BackgroundQuestion,
-    budget: BudgetQuestion,
-    "company-detail": CompanyDetailQuestion,
-    gender: GenderQuestion,
-    impression1: Impression1Question,
-    impression2: Impression2Question,
-    impression3: Impression3Question,
-    purpose: PurposeQuestion,
-    schedule: ScheduleQuestion,
-    "self-introduction": SelfIntroductionQuestion,
-    "site-category": SiteCategoryQuestion,
-    "site-function": SiteFunctionQuestion,
-    "site-page": SitePageQuestion,
-    status: StatusQuestion,
-    "user-type": UserTypeQuestion,
+export const questionComponents: Record<string, Record<string, ComponentType>> = {
+    requirements: {
+        "self-introduction": SelfIntroductionRequirementsQuestion,
+        background: BackgroundQuestion,
+        "company-detail": CompanyDetailQuestion,
+        purpose: PurposeQuestion,
+        ai: AiQuestion,
+    },
+    target: {
+        "user-type": UserTypeQuestion,
+        gender: GenderQuestion,
+        age: AgeQuestion,
+        status: StatusQuestion,
+    },
+    function: {
+        "self-introduction": SelfIntroductionFunctionQuestion,
+        "site-category": SiteCategoryQuestion,
+        "site-page": SitePageQuestion,
+        "site-function": SiteFunctionQuestion,
+    },
+    image: {
+        abstract: AbstractQuestion,
+        impression1: Impression1Question,
+        impression2: Impression2Question,
+        impression3: Impression3Question,
+    },
+    proposal: {
+        schedule: ScheduleQuestion,
+        budget: BudgetQuestion,
+    },
 };

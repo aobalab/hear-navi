@@ -33,7 +33,7 @@ export default async function Page({ params }: PageProps) {
     }
 
     const currentSection = currentCategory.sections.find((item) => item.title === section);
-    const QuestionComponent = questionComponents[section];
+    const QuestionComponent = questionComponents[category]?.[section];
 
     if (!currentSection || !QuestionComponent) {
         notFound();
@@ -47,9 +47,6 @@ export default async function Page({ params }: PageProps) {
         </div>
         <div className="main-content p-8">
             <div className="mt-8 mb-12">
-                <p className="mb-6 text-sm text-muted-foreground">
-                    {currentSection.label}
-                </p>
                 <QuestionComponent />
             </div>
             {shouldShowSummary ? <Summary /> : null}
