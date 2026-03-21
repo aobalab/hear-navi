@@ -1,32 +1,30 @@
 import { Categories } from "@/app/hearing/config";
-import nextConfig from "@/next.config";
 import Link from "next/link";
 
-function SideBar({ category }: { category: string }) {
+function SideBar({ category, section }: { category: string; section?: string }) {
     const currentCategory = Categories[category as keyof typeof Categories];
-    const currentCategoryLabel = currentCategory?.label;
-    const isRecordPage = category === "record";
+    const sections = currentCategory?.sections ?? [];
 
     return (
         <div className="main-side-bar p-4 col-span-3 flex flex-col gap-8">
-            {Object.entries(Categories).map(([key, category]) => (
-                <Link href={`/hearing/${key}/${category.sections[0].title}`} key={category.label}>
-                    <div key={category.label} className="main-side-bar-item text-center flex flex-col items-center gap-2 p-1">
-                        <figure>
-                            <img src={nextConfig.basePath + `/img/${category.label}_${category.label === currentCategoryLabel ? "黄色" : "青"}.png`} alt={category.label} />
-                        </figure>
-                        <span>
-                            {category.label}
-                        </span>
-                    </div>
-                </Link>
-            ))
-            }
-            <Link href="/hearing/record">
-                <div className={isRecordPage ? "bg-yellow-500 text-center text-white p-2 rounded" : "bg-blue-500 text-center text-white p-2 rounded"}>
+            {sections.length > 0 ? sections.map((item) => {
+                const isActive = item.title === section;
+
+                return (
+                    <Link href={`/hearing/${category}/${item.title}`} key={item.title}>
+                        <div className={isActive
+                            ? "rounded-2xl bg-[#6599FF] px-4 py-3 text-sm font-medium text-white shadow-sm"
+                            : "rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-600 transition-colors hover:border-[#6599FF] hover:text-[#6599FF]"
+                        }>
+                            {item.label}
+                        </div>
+                    </Link>
+                );
+            }) : (
+                <div className="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-600">
                     カルテ
                 </div>
-            </Link>
+            )}
         </div >
     );
 }
