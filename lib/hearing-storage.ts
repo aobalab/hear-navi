@@ -65,6 +65,14 @@ export function buildHearingSummary(answers: HearingAnswers) {
 
     return orderedSections
         .filter((section) => (answers[section] ?? "").trim().length > 0)
-        .map((section) => `${sectionLabelMap[section] ?? section}: ${answers[section].trim()}`)
+        .map((section) => {
+            const normalizedValue = answers[section]
+                .split("\n")
+                .map((line) => line.trim())
+                .filter((line) => line.length > 0)
+                .join(" / ");
+
+            return `${sectionLabelMap[section] ?? section}: ${normalizedValue}`;
+        })
         .join("\n");
 }

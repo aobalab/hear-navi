@@ -26,6 +26,7 @@ interface PageProps {
 export default async function Page({ params }: PageProps) {
     const { category, section } = await params;
     const currentCategory = Categories[category];
+    const shouldShowSummary = section === "ai";
 
     if (!currentCategory) {
         notFound();
@@ -51,7 +52,7 @@ export default async function Page({ params }: PageProps) {
                 </p>
                 <QuestionComponent />
             </div>
-            <Summary />
+            {shouldShowSummary ? <Summary /> : null}
         </div>
     </>);
 }
