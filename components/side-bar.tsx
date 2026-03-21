@@ -3,7 +3,10 @@ import nextConfig from "@/next.config";
 import Link from "next/link";
 
 function SideBar({ category }: { category: string }) {
-    const currentCategoryLabel = Categories[category as keyof typeof Categories].label;
+    const currentCategory = Categories[category as keyof typeof Categories];
+    const currentCategoryLabel = currentCategory?.label;
+    const isRecordPage = category === "record";
+
     return (
         <div className="main-side-bar p-4 col-span-3 flex flex-col gap-8">
             {Object.entries(Categories).map(([key, category]) => (
@@ -19,7 +22,11 @@ function SideBar({ category }: { category: string }) {
                 </Link>
             ))
             }
-            <div className="bg-blue-500 text-center text-white p-2 rounded">カルテ</div>
+            <Link href="/hearing/record">
+                <div className={isRecordPage ? "bg-yellow-500 text-center text-white p-2 rounded" : "bg-blue-500 text-center text-white p-2 rounded"}>
+                    カルテ
+                </div>
+            </Link>
         </div >
     );
 }
