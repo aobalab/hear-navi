@@ -95,6 +95,19 @@ function getTargetCardIcon(itemKey: string, answers: HearingAnswers) {
     return null;
 }
 
+function getTargetCardSummary(itemKey: string, answers: HearingAnswers) {
+    if (itemKey !== "status") {
+        return "";
+    }
+
+    const gender = parseLabeledAnswer(answers.gender ?? "", ["傾向"]);
+    const age = parseLabeledAnswer(answers.age ?? "", ["区分", "年代", "中心年齢層"]);
+    const genderType = gender.values["傾向"] ?? gender.remainder;
+    const ageDetail = age.values["年代"] ?? age.values["中心年齢層"] ?? age.remainder;
+
+    return [genderType, ageDetail].filter((value) => value.length > 0).join(" / ");
+}
+
 export default function RecordPage() {
     const [items, setItems] = useState<Record<string, RecordItem[]>>({});
     const [answers, setAnswers] = useState<HearingAnswers>({});
@@ -171,7 +184,14 @@ export default function RecordPage() {
                                                 <div className="mb-2 flex items-center justify-between gap-4">
                                                     <div className="flex items-center gap-2">
                                                         {categoryKey === "target" ? getTargetCardIcon(item.key, answers) : null}
-                                                        <p className="text-sm font-medium text-slate-500">{item.label}</p>
+                                                        <div>
+                                                            <p className="text-sm font-medium text-slate-500">{item.label}</p>
+                                                            {categoryKey === "target" && item.key === "status" && item.isFilled && getTargetCardSummary(item.key, answers) ? (
+                                                                <p className="text-xs font-medium text-slate-400">
+                                                                    {getTargetCardSummary(item.key, answers)}
+                                                                </p>
+                                                            ) : null}
+                                                        </div>
                                                     </div>
                                                     <Link
                                                         href={item.href}
