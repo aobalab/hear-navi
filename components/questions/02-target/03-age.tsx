@@ -68,21 +68,6 @@ export default function AgeQuestion() {
     }, []);
 
     useEffect(() => {
-        const options = ageOptions[ageCategory as keyof typeof ageOptions];
-
-        if (!options) {
-            setAgeDetail("");
-            return;
-        }
-
-        if (ageDetail && options.includes(ageDetail as never)) {
-            return;
-        }
-
-        setAgeDetail("");
-    }, [ageCategory]);
-
-    useEffect(() => {
         if (!isReady) {
             return;
         }
@@ -96,6 +81,18 @@ export default function AgeQuestion() {
         );
     }, [ageCategory, ageDetail, isReady]);
 
+    const handleAgeCategoryChange = (nextCategory: string) => {
+        setAgeCategory(nextCategory);
+
+        const nextOptions = ageOptions[nextCategory as keyof typeof ageOptions] ?? [];
+
+        if (!ageDetail || nextOptions.includes(ageDetail as never)) {
+            return;
+        }
+
+        setAgeDetail("");
+    };
+
     const currentOptions = ageOptions[ageCategory as keyof typeof ageOptions] ?? [];
 
     return (
@@ -104,7 +101,7 @@ export default function AgeQuestion() {
                 <FieldDescription className="mb-3">
                     まず大まかな区分を選び、そのあと具体的な年代を選択してください。
                 </FieldDescription>
-                <RadioGroup value={ageCategory} onValueChange={setAgeCategory} className="grid gap-4 md:grid-cols-3">
+                <RadioGroup value={ageCategory} onValueChange={handleAgeCategoryChange} className="grid gap-4 md:grid-cols-3">
                     <label
                         htmlFor="age-child"
                         className={cn(
