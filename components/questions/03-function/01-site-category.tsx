@@ -11,36 +11,43 @@ import { readHearingAnswers, writeHearingAnswer } from "@/lib/hearing-storage";
 
 const siteCategoryOptions = [
     {
+        name: "corporate",
         value: "コーポレートサイト",
         catchcopy: "会社を知って欲しい",
         description: "企業情報や事業内容を伝える標準的な企業サイト",
         icon: BriefcaseBusiness,
     },
     {
+        name: "ec",
+
         value: "ECサイト",
         catchcopy: "商品を売りたい",
         description: "商品販売や決済を目的にしたオンラインショップ",
         icon: ShoppingCart,
     },
     {
+        name: "media",
         value: "メディアサイト",
         catchcopy: "記事を読んで欲しい",
         description: "記事や読み物を継続的に発信する情報サイト",
         icon: Newspaper,
     },
     {
+        name: "brand",
         value: "ブランドサイト",
         catchcopy: "魅力を伝えたい",
         description: "ブランドの世界観や魅力を印象的に伝えるサイト",
         icon: BadgeCent,
     },
     {
+        name: "lp-event",
         value: "LP・イベントサイト",
         catchcopy: "キャンペーンを伝えたい",
         description: "単一訴求やイベント告知に特化した縦長ページ中心のサイト",
         icon: CalendarRange,
     },
     {
+        name: "recruit",
         value: "採用サイト",
         catchcopy: "新しく人を雇いたい",
         description: "採用情報や働く魅力を発信するリクルート向けサイト",
