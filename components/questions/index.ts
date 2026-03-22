@@ -12,8 +12,6 @@ import SitePageQuestion from "@/components/questions/03-function/02-site-page";
 import SiteFunctionQuestion from "@/components/questions/03-function/03-site-function";
 import AbstractQuestion from "@/components/questions/04-image/01-abstract";
 import Impression1Question from "@/components/questions/04-image/02-impression1";
-import Impression2Question from "@/components/questions/04-image/03-impression2";
-import Impression3Question from "@/components/questions/04-image/04-impression3";
 import ScheduleQuestion from "@/components/questions/05-proposal/01-schedule";
 import BudgetQuestion from "@/components/questions/05-proposal/02-budget";
 
@@ -37,8 +35,6 @@ export const questionComponents: Record<string, Record<string, ComponentType>> =
     image: {
         abstract: AbstractQuestion,
         impression1: Impression1Question,
-        impression2: Impression2Question,
-        impression3: Impression3Question,
     },
     proposal: {
         schedule: ScheduleQuestion,

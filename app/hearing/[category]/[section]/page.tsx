@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 
 import { questionComponents } from "@/components/questions";
 import { Categories } from '../../config';
@@ -24,6 +24,11 @@ interface PageProps {
 
 export default async function Page({ params }: PageProps) {
     const { category, section } = await params;
+
+    if (category === "image" && (section === "impression2" || section === "impression3")) {
+        redirect("/hearing/image/impression1");
+    }
+
     const currentCategory = Categories[category];
 
     if (!currentCategory) {

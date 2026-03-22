@@ -37,9 +37,7 @@ export const Categories: Record<string, {
         label: "イメージ",
         sections: [
             { title: "abstract", label: "抽象的" },
-            { title: "impression1", label: "印象1" },
-            { title: "impression2", label: "印象2" },
-            { title: "impression3", label: "印象3" },
+            { title: "impression1", label: "印象" },
         ]
     },
     proposal: {

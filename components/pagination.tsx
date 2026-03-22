@@ -1,4 +1,5 @@
 import { Categories } from "@/app/hearing/config"
+import { FileText } from "lucide-react"
 import Link from "next/link"
 import { Button } from "./ui/button";
 
@@ -33,6 +34,8 @@ function getPreviousSectionLink(category: string, section: string) {
 export default function Pagination({ category, section }: { category: string, section: string }) {
     const nextLink = getNextSectionLink(category, section);
     const prevLink = getPreviousSectionLink(category, section);
+    const isLastSection = nextLink === null;
+
     return (
         <div className="main-pagination flex justify-between p-4">
             {
@@ -45,7 +48,13 @@ export default function Pagination({ category, section }: { category: string, se
                 nextLink ?
                     <Link href={`/hearing/${nextLink}`}>
                         <Button className="button">次へ &gt;</Button>
-                    </Link> : <div></div>
+                    </Link> : isLastSection ?
+                        <Link href="/hearing/record">
+                            <Button className="button bg-[#1C5D99] shadow-md hover:bg-[#174C7D]">
+                                <FileText aria-hidden="true" />
+                                カルテへ &gt;
+                            </Button>
+                        </Link> : <div></div>
             }
         </div >
     )

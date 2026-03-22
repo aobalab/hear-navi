@@ -6,35 +6,57 @@ import { Field, FieldContent, FieldDescription } from "@/components/ui/field";
 import { cn } from "@/lib/utils";
 import { readHearingAnswers, writeHearingAnswer } from "@/lib/hearing-storage";
 
-const impression1Options = [
-    "ロマンティック",
+const impressionOptions = [
     "ポップ",
     "カジュアル",
     "かわいい",
     "強い",
     "くだけている",
     "キュート",
-    "クリア",
     "親しみやすい",
     "プリティ",
-    "おしゃれ",
+    "お洒落",
     "エレガント",
+    "シック",
+    "上品",
+    "クール",
+    "ダイナミック",
+    "ゴージャス",
+    "高級",
+    "ワイルド",
+    "クラシック",
+    "フォーマル",
+    "モダン",
+    "ハード",
+    "活発",
+    "若々しい",
+    "真面目",
+    "しっかりしている",
+    "知的",
+    "男っぽい",
+    "楽しい",
+    "誠実",
+    "信頼感",
+    "かっこいい"
 ] as const;
+
+function restoreSelections(value: string) {
+    return value
+        .split("\n")
+        .map((item) => item.trim())
+        .filter((item): item is (typeof impressionOptions)[number] =>
+            impressionOptions.includes(item as (typeof impressionOptions)[number])
+        );
+}
 
 export default function Impression1Question() {
     const [selectedWords, setSelectedWords] = useState<string[]>([]);
     const [isReady, setIsReady] = useState(false);
 
     useEffect(() => {
-        const stored = readHearingAnswers().impression1 ?? "";
-        const restoredValues = stored
-            .split("\n")
-            .map((item) => item.trim())
-            .filter((item): item is (typeof impression1Options)[number] =>
-                impression1Options.includes(item as (typeof impression1Options)[number])
-            );
+        const answers = readHearingAnswers();
 
-        setSelectedWords(restoredValues);
+        setSelectedWords(restoreSelections(answers.impression1 ?? ""));
         setIsReady(true);
     }, []);
 
@@ -44,6 +66,8 @@ export default function Impression1Question() {
         }
 
         writeHearingAnswer("impression1", selectedWords.join("\n"));
+        writeHearingAnswer("impression2", "");
+        writeHearingAnswer("impression3", "");
     }, [isReady, selectedWords]);
 
     const toggleWord = (word: string) => {
@@ -67,7 +91,7 @@ export default function Impression1Question() {
                     イメージに近い単語を 4 つまで選択してください。
                 </FieldDescription>
                 <div className="grid gap-4 md:grid-cols-3">
-                    {impression1Options.map((word) => (
+                    {impressionOptions.map((word) => (
                         <button
                             key={word}
                             type="button"
