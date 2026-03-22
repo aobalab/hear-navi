@@ -5,37 +5,30 @@ import Link from "next/link";
 function SideBar({ category, section }: { category: string; section?: string }) {
     const currentCategory = Categories[category as keyof typeof Categories];
     const sections = currentCategory?.sections ?? [];
-    const categoryLabel = category === "record" ? "カルテ" : currentCategory?.label ?? "ヒアリング";
-    const currentCategoryIcon = category === "record"
-        ? `${nextConfig.basePath}/img/カルテ_青.svg`
-        : `${nextConfig.basePath}/img/${categoryLabel}_青.png`;
+    const categoryLabel = currentCategory?.label ?? "ヒアリング";
+    const currentCategoryIcon = `${nextConfig.basePath}/img/${categoryLabel}_青.png`;
 
     return (
         <div className="main-side-bar col-span-3 flex h-fit self-start flex-col gap-8 p-4">
-            <div className="flex flex-col items-center gap-3 rounded-2xl bg-white px-4 py-5 text-center shadow-sm">
-                <figure className="rounded-2xl bg-[#6599FF]/10 p-3">
+            <div className="flex flex-col items-center gap-3 rounded-xl bg-white px-4 py-5 text-center shadow-sm">
+                <figure className="rounded-xl bg-[#6599FF]/10 p-3">
                     <img src={currentCategoryIcon} alt={categoryLabel} className="h-12 w-12 object-contain" />
                 </figure>
                 <p className="text-base font-semibold text-slate-800">{categoryLabel}</p>
             </div>
-            {sections.length > 0 ? sections.map((item) => {
+            {sections.map((item) => {
                 const isActive = item.title === section;
-
                 return (
                     <Link href={`/hearing/${category}/${item.title}`} key={item.title}>
                         <div className={isActive
-                            ? "rounded-2xl bg-[#6599FF] px-4 py-3 text-sm font-medium text-white shadow-sm"
-                            : "rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-600 transition-colors hover:border-[#6599FF] hover:text-[#6599FF]"
+                            ? "rounded-xl bg-[#6599FF] px-4 py-3 text-sm font-medium text-white shadow-sm"
+                            : "rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-600 transition-colors hover:border-[#6599FF] hover:text-[#6599FF]"
                         }>
                             {item.label}
                         </div>
                     </Link>
                 );
-            }) : (
-                <div className="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-600">
-                    カルテ
-                </div>
-            )}
+            })}
         </div >
     );
 }

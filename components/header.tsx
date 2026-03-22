@@ -7,7 +7,7 @@ function Header({ category, section }: { category: string; section: string }) {
         <header className="flex bg-white pt-2 pb-2 px-24">
             <div className="flex-1 flex items-center">
                 <figure>
-                    <img src={nextConfig.basePath + "/img/logo.png"} alt="Logo" className="w-64 rounded-lg" />
+                    <img src={nextConfig.basePath + "/img/logo.png"} alt="Logo" className="w-48 rounded-lg" />
                 </figure>
             </div>
             <div className="flex-1 flex items-start justify-end gap-6 overflow-x-auto text-slate-700">
@@ -19,8 +19,8 @@ function Header({ category, section }: { category: string; section: string }) {
                             href={`/hearing/${key}/${item.sections[0].title}`}
                             className="min-w-fit"
                         >
-                            <div className="flex flex-col items-center gap-2 text-center">
-                                <figure className={isActive ? "rounded-2xl bg-[#6599FF]/10 p-2" : "rounded-2xl p-2 transition-colors hover:bg-slate-100"}>
+                            <div className="flex flex-col items-center gap-1 text-center">
+                                <figure className={isActive ? "rounded-xl bg-[#6599FF]/10 p-2" : "rounded-xl p-2 transition-colors hover:bg-slate-100"}>
                                     <img
                                         src={nextConfig.basePath + `/img/${item.label}_${isActive ? "黄色" : "青"}.png`}
                                         alt={item.label}
@@ -36,8 +36,8 @@ function Header({ category, section }: { category: string; section: string }) {
                     href="/hearing/record"
                     className="min-w-fit"
                 >
-                    <div className="flex flex-col items-center gap-2 text-center">
-                        <figure className={category === "record" ? "rounded-2xl bg-[#6599FF]/10 p-2" : "rounded-2xl p-2 transition-colors hover:bg-slate-100"}>
+                    <div className="flex flex-col items-center gap-1 text-center">
+                        <figure className={category === "record" ? "rounded-xl bg-[#6599FF]/10 p-2" : "rounded-xl p-2 transition-colors hover:bg-slate-100"}>
                             <img
                                 src={category === "record"
                                     ? `${nextConfig.basePath}/img/カルテ_黄色.svg`
