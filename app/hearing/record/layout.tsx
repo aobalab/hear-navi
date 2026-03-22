@@ -8,7 +8,7 @@ export default function RecordLayout({
     return (
         <>
             <Header category="record" section="" />
-            <main className="main mx-auto w-8/10 pt-12">
+            <main className="main mx-auto w-8/10 pt-12 pb-8">
                 <div className="main-wrapper relative">{children}</div>
             </main>
         </>

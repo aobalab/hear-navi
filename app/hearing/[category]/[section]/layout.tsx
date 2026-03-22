@@ -12,7 +12,7 @@ export default async function SectionLayout({
     return (
         <>
             <Header category={category} section={section ?? ""} />
-            <main className="main grid grid-cols-24 gap-12 pt-12 w-8/10 mx-auto">
+            <main className="main mx-auto grid w-8/10 grid-cols-24 gap-12 pt-12 pb-8">
                 <Sidebar category={category} section={section ?? ""} />
                 <div className="main-wrapper col-span-21 relative">
                     <div className="main-content p-8 pb-4">

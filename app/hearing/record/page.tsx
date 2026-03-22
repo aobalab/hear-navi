@@ -27,6 +27,31 @@ function normalizeAnswer(value: string) {
         .join(" / ");
 }
 
+function normalizeSelfIntroductionAnswer(value: string) {
+    const parsed = parseLabeledAnswer(value, ["姓", "名", "セイ", "メイ", "会社名", "職業"]);
+    const fullName = [parsed.values["姓"], parsed.values["名"]].filter((item) => item && item.length > 0).join(" ");
+    const fullNameKana = [parsed.values["セイ"], parsed.values["メイ"]].filter((item) => item && item.length > 0).join(" ");
+    const nameWithKana = fullName && fullNameKana
+        ? `${fullName}（${fullNameKana}）`
+        : fullName || fullNameKana;
+
+    return [
+        nameWithKana ? `お名前: ${nameWithKana}` : "",
+        parsed.values["会社名"] ? `会社名: ${parsed.values["会社名"]}` : "",
+        parsed.values["職業"] ? `職業: ${parsed.values["職業"]}` : "",
+    ]
+        .filter((item) => item.length > 0)
+        .join("\n");
+}
+
+function normalizeRecordAnswer(sectionKey: string, value: string) {
+    if (sectionKey === "self-introduction") {
+        return normalizeSelfIntroductionAnswer(value);
+    }
+
+    return normalizeAnswer(value);
+}
+
 function parseListAnswer(value: string) {
     return value
         .split("\n")
@@ -404,6 +429,47 @@ function getFunctionCardSummary(itemKey: string, answers: HearingAnswers) {
     return "";
 }
 
+function RecordItemCard({ item, categoryKey, answers }: { item: RecordItem; categoryKey: string; answers: HearingAnswers }) {
+    return (
+        <div className={item.isFilled ? "rounded-xl bg-slate-50 p-4" : "rounded-xl border border-dashed border-slate-200 bg-slate-50/40 p-4"}>
+            <div className="mb-2 flex items-center gap-4">
+                <div className={categoryKey === "function" && item.key === "site-category" ? "flex items-center gap-4" : "flex items-center gap-2"}>
+                    {categoryKey === "target" ? getTargetCardIcon(item.key, answers) : null}
+                    {categoryKey === "function" && item.key === "site-category" ? (
+                        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white shadow-sm">
+                            {getFunctionCardIcon(item.key, answers) ? <div className="[&_svg]:size-7">{getFunctionCardIcon(item.key, answers)}</div> : null}
+                        </div>
+                    ) : categoryKey === "function" ? getFunctionCardIcon(item.key, answers) : null}
+                    <div>
+                        <p className="text-sm font-medium text-slate-500">{item.label}</p>
+                        {categoryKey === "target" && item.key === "status" && item.isFilled && getTargetCardSummary(item.key, answers) ? (
+                            <p className="text-xs font-medium text-slate-400">
+                                {getTargetCardSummary(item.key, answers)}
+                            </p>
+                        ) : null}
+                        {categoryKey === "function" && item.key === "site-category" && item.isFilled && getFunctionCardSummary(item.key, answers) ? (
+                            <p className="text-sm font-semibold text-slate-700">
+                                {getFunctionCardSummary(item.key, answers)}
+                            </p>
+                        ) : null}
+                    </div>
+                </div>
+            </div>
+            {categoryKey === "proposal" && item.key === "schedule" ? (
+                <ScheduleCalendarCard rawValue={item.rawValue} />
+            ) : categoryKey === "image" && item.key === "abstract" ? (
+                <AbstractBarChartCard rawValue={item.rawValue} isFilled={item.isFilled} />
+            ) : categoryKey === "function" && (item.key === "site-page" || item.key === "site-function") ? (
+                <FunctionListCard rawValue={item.rawValue} isFilled={item.isFilled} />
+            ) : (
+                <p className={item.isFilled ? "whitespace-pre-wrap text-sm leading-7 text-slate-900" : "text-sm leading-7 text-muted-foreground"}>
+                    {item.isFilled ? item.value : "まだ入力されていません。"}
+                </p>
+            )}
+        </div>
+    );
+}
+
 export default function RecordPage() {
     const [items, setItems] = useState<Record<string, RecordItem[]>>({});
     const [answers, setAnswers] = useState<HearingAnswers>({});
@@ -417,7 +483,7 @@ export default function RecordPage() {
                 const categoryItems = category.sections
                     .map((section) => {
                         const sectionValue = answers[section.title] ?? "";
-                        const normalizedValue = normalizeAnswer(sectionValue);
+                        const normalizedValue = normalizeRecordAnswer(section.title, sectionValue);
 
                         return {
                             key: section.title,
@@ -464,6 +530,8 @@ export default function RecordPage() {
                             const filledCount = categoryItems.filter((item) => item.isFilled).length;
                             const categoryHref = `/hearing/${categoryKey}/${category.sections[0].title}`;
                             const isRequirementsCategory = categoryKey === "requirements";
+                            const selfIntroductionItem = categoryItems.find((item) => item.key === "self-introduction");
+                            const rightRequirementItems = categoryItems.filter((item) => item.key === "company-detail" || item.key === "background");
 
                             return (
                                 <section key={categoryKey} className={isRequirementsCategory ? "rounded-2xl border border-border bg-white p-6 shadow-sm xl:col-span-2" : "rounded-2xl border border-border bg-white p-6 shadow-sm"}>
@@ -495,46 +563,24 @@ export default function RecordPage() {
                                             </Link>
                                         </div>
                                     </div>
-                                    <div className="space-y-4">
-                                        {categoryItems.map((item) => (
-                                            <div key={item.key} className={item.isFilled ? "rounded-xl bg-slate-50 p-4" : "rounded-xl border border-dashed border-slate-200 bg-slate-50/40 p-4"}>
-                                                <div className="mb-2 flex items-center gap-4">
-                                                    <div className={categoryKey === "function" && item.key === "site-category" ? "flex items-center gap-4" : "flex items-center gap-2"}>
-                                                        {categoryKey === "target" ? getTargetCardIcon(item.key, answers) : null}
-                                                        {categoryKey === "function" && item.key === "site-category" ? (
-                                                            <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-white shadow-sm">
-                                                                {getFunctionCardIcon(item.key, answers) ? <div className="[&_svg]:size-7">{getFunctionCardIcon(item.key, answers)}</div> : null}
-                                                            </div>
-                                                        ) : categoryKey === "function" ? getFunctionCardIcon(item.key, answers) : null}
-                                                        <div>
-                                                            <p className="text-sm font-medium text-slate-500">{item.label}</p>
-                                                            {categoryKey === "target" && item.key === "status" && item.isFilled && getTargetCardSummary(item.key, answers) ? (
-                                                                <p className="text-xs font-medium text-slate-400">
-                                                                    {getTargetCardSummary(item.key, answers)}
-                                                                </p>
-                                                            ) : null}
-                                                            {categoryKey === "function" && item.key === "site-category" && item.isFilled && getFunctionCardSummary(item.key, answers) ? (
-                                                                <p className="text-sm font-semibold text-slate-700">
-                                                                    {getFunctionCardSummary(item.key, answers)}
-                                                                </p>
-                                                            ) : null}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                {categoryKey === "proposal" && item.key === "schedule" ? (
-                                                    <ScheduleCalendarCard rawValue={item.rawValue} />
-                                                ) : categoryKey === "image" && item.key === "abstract" ? (
-                                                    <AbstractBarChartCard rawValue={item.rawValue} isFilled={item.isFilled} />
-                                                ) : categoryKey === "function" && (item.key === "site-page" || item.key === "site-function") ? (
-                                                    <FunctionListCard rawValue={item.rawValue} isFilled={item.isFilled} />
-                                                ) : (
-                                                    <p className={item.isFilled ? "whitespace-pre-wrap text-sm leading-7 text-slate-900" : "text-sm leading-7 text-muted-foreground"}>
-                                                        {item.isFilled ? item.value : "まだ入力されていません。"}
-                                                    </p>
-                                                )}
+                                    {isRequirementsCategory ? (
+                                        <div className="grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
+                                            <div>
+                                                {selfIntroductionItem ? <RecordItemCard item={selfIntroductionItem} categoryKey={categoryKey} answers={answers} /> : null}
                                             </div>
-                                        ))}
-                                    </div>
+                                            <div className="space-y-4">
+                                                {rightRequirementItems.map((item) => (
+                                                    <RecordItemCard key={item.key} item={item} categoryKey={categoryKey} answers={answers} />
+                                                ))}
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        <div className="space-y-4">
+                                            {categoryItems.map((item) => (
+                                                <RecordItemCard key={item.key} item={item} categoryKey={categoryKey} answers={answers} />
+                                            ))}
+                                        </div>
+                                    )}
                                 </section>
                             );
                         })}
