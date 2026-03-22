@@ -59,19 +59,6 @@ function getTodayDateValue() {
     return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
 }
 
-function getRangeDayCount(startDate: string, endDate: string) {
-    if (!startDate || !endDate) {
-        return null;
-    }
-
-    const [startYear, startMonth, startDay] = startDate.split("-").map(Number);
-    const [endYear, endMonth, endDay] = endDate.split("-").map(Number);
-    const startTime = Date.UTC(startYear, startMonth - 1, startDay);
-    const endTime = Date.UTC(endYear, endMonth - 1, endDay);
-
-    return Math.floor((endTime - startTime) / (1000 * 60 * 60 * 24)) + 1;
-}
-
 function buildCalendarDays(displayYear: number, displayMonth: number) {
     const firstDay = new Date(displayYear, displayMonth, 1);
     const firstWeekday = firstDay.getDay();
@@ -205,7 +192,6 @@ export default function ScheduleQuestion() {
     };
 
     const isRangeEdge = (dateValue: string) => dateValue === startDate || dateValue === endDate;
-    const selectedRangeDayCount = getRangeDayCount(startDate, endDate);
 
     return (
         <Field>
@@ -288,8 +274,8 @@ export default function ScheduleQuestion() {
                                                 isPastDate && "cursor-not-allowed text-muted-foreground/40",
                                                 !isSelected && !isPastDate && isSunday && "text-red-500",
                                                 !isSelected && !isPastDate && isSaturday && "text-blue-500",
-                                                isSelected && "border-primary/30 bg-primary/10 text-primary",
-                                                isEdge && "border-primary bg-primary text-primary-foreground hover:bg-primary/90"
+                                                isSelected && "border-primary/40 bg-primary/15 font-medium text-primary",
+                                                isEdge && "border-primary bg-primary text-primary-foreground shadow-sm hover:bg-primary/90"
                                             )}
                                         >
                                             {entry.day}
@@ -298,11 +284,13 @@ export default function ScheduleQuestion() {
                                 })}
                             </div>
                         </div>
-                        <div className="space-y-1 text-sm text-muted-foreground">
-                            <p>選択期間: {formatDisplayRange(startDate, endDate)}</p>
-                            {selectedRangeDayCount ? <p>{selectedRangeDayCount}日間</p> : null}
-                            <p>開始日を選んだ後に終了日を選択してください。</p>
-                            <p>本日より前の日付は選択できません。</p>
+                        <div className="rounded-xl border border-primary/20 bg-primary/5 p-4">
+                            <p className="text-xs font-semibold tracking-wide text-primary">選択期間</p>
+                            <p className="mt-2 text-base font-semibold text-slate-900">{formatDisplayRange(startDate, endDate)}</p>
+                            <div className="mt-3 space-y-1 text-sm text-muted-foreground">
+                                <p>開始日を選んだ後に終了日を選択してください。</p>
+                                <p>本日より前の日付は選択できません。</p>
+                            </div>
                         </div>
                     </div>
                     <div className="space-y-3 rounded-xl border border-border bg-background p-5">

@@ -48,10 +48,8 @@ export default async function Page({ params }: PageProps) {
                 {currentSection.label}
             </p>
         </div>
-        <div className="main-content p-8">
-            <div className="mt-8 mb-12">
-                <QuestionComponent />
-            </div>
+        <div className="mt-8 mb-12">
+            <QuestionComponent />
         </div>
     </>);
 }
