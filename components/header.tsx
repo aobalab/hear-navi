@@ -7,7 +7,7 @@ function Header({ category, section: _section }: { category: string; section: st
 
     return (
         <header className="flex bg-white pt-2 pb-2 px-24">
-            <div className="flex-1 flex items-center">
+            <div className="flex items-center">
                 <figure>
                     <img src={"/img/logo.png"} alt="Logo" className="w-48 rounded-lg" />
                 </figure>
