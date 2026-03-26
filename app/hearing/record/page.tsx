@@ -553,7 +553,7 @@ export default function RecordPage() {
                                         <div className="flex items-center gap-3">
                                             <figure className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-50 p-2">
                                                 <img
-                                                    src={nextConfig.basePath + `/img/${category.label}_青.png`}
+                                                    src={`/img/${category.label}_青.png`}
                                                     alt={category.label}
                                                     className="max-h-full max-w-full object-contain"
                                                 />

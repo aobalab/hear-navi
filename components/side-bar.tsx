@@ -6,7 +6,7 @@ function SideBar({ category, section }: { category: string; section?: string }) 
     const currentCategory = Categories[category as keyof typeof Categories];
     const sections = currentCategory?.sections ?? [];
     const categoryLabel = currentCategory?.label ?? "ヒアリング";
-    const currentCategoryIcon = `${nextConfig.basePath}/img/${categoryLabel}_青.png`;
+    const currentCategoryIcon = `/img/${categoryLabel}_青.png`;
 
     return (
         <div className="main-side-bar col-span-3 flex h-fit self-start flex-col gap-8 p-4">
