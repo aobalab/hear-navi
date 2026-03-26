@@ -554,7 +554,7 @@ export default function RecordPage() {
                                     <div className="mb-4 flex items-center justify-between gap-4 border-b border-border pb-3">
                                         <div className="flex items-center gap-3">
                                             <figure className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-50 p-2">
-                                                {CategoryIcon ? <CategoryIcon aria-hidden="true" className="h-6 w-6 text-[#1C5D99]" strokeWidth={1.8} /> : null}
+                                                {CategoryIcon ? <CategoryIcon aria-hidden="true" className="h-6 w-6 text-[#1C5D99]" /> : null}
                                             </figure>
                                             <div>
                                                 <h2 className="text-lg font-semibold text-slate-900">{category.label}</h2>

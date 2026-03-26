@@ -13,7 +13,7 @@ function SideBar({ category, section }: { category: string; section?: string }) 
             <div className="flex flex-col items-center gap-3 rounded-xl bg-white px-4 py-5 text-center shadow-sm">
                 <figure className="rounded-xl bg-[#6599FF]/10 p-3">
                     {CategoryIcon ? (
-                        <CategoryIcon aria-hidden="true" className="h-12 w-12 text-[#6599FF]" strokeWidth={1.8} />
+                        <CategoryIcon aria-hidden="true" className="h-12 w-12 text-[#6599FF]" />
                     ) : null}
                 </figure>
                 <p className="text-base font-semibold text-slate-800">{categoryLabel}</p>

@@ -28,7 +28,6 @@ function Header({ category, section: _section }: { category: string; section: st
                                     <Icon
                                         aria-hidden="true"
                                         className={isActive ? "h-10 w-10 text-[#6599FF]" : "h-10 w-10 text-slate-700"}
-                                        strokeWidth={1.8}
                                     />
                                 </figure>
                                 <span className={isActive ? "text-sm font-semibold text-[#6599FF]" : "text-sm font-medium text-slate-700"}>{item.label}</span>
@@ -45,7 +44,6 @@ function Header({ category, section: _section }: { category: string; section: st
                             <RecordIcon
                                 aria-hidden="true"
                                 className={category === "record" ? "h-10 w-10 text-[#6599FF]" : "h-10 w-10 text-slate-700"}
-                                strokeWidth={1.8}
                             />
                         </figure>
                         <span className={category === "record" ? "text-sm font-semibold text-[#6599FF]" : "text-sm font-medium text-slate-700"}>カルテ</span>
