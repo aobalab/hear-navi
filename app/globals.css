@@ -161,3 +161,48 @@ header {
   padding: 10px 20px;
   box-shadow: 0 4px 5px rgba(0, 0, 0, 0.2);
 }
+
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 12mm;
+  }
+
+  body {
+    background: #fff !important;
+    color: #111827;
+  }
+
+  header {
+    display: none !important;
+  }
+
+  .main {
+    width: 100% !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .main-wrapper {
+    position: static !important;
+  }
+
+  .main-content {
+    background: #fff !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    padding: 0 !important;
+  }
+
+  .record-category-section {
+    page-break-inside: avoid !important;
+  }
+
+  .record-item-card {
+    padding: 0 !important;
+  }
+
+  .print-hidden {
+    display: none !important;
+  }
+}

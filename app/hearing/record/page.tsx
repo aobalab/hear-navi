@@ -5,6 +5,7 @@ import Link from "next/link";
 import { BadgeCent, Baby, Briefcase, BriefcaseBusiness, Building2, CalendarRange, CircleOff, Mars, Newspaper, Search, ShoppingCart, UserRound, Users, Venus } from "lucide-react";
 
 import { Categories } from "@/app/hearing/config";
+import { cn } from "@/lib/utils";
 import { parseLabeledAnswer } from "@/lib/hearing-answer-format";
 import { HEARING_STORAGE_EVENT, readHearingAnswers, type HearingAnswers } from "@/lib/hearing-storage";
 import nextConfig from "@/next.config";
@@ -18,6 +19,8 @@ type RecordItem = {
 };
 
 const weekLabels = ["日", "月", "火", "水", "木", "金", "土"];
+const abstractStepValues = [0, 25, 50, 75, 100] as const;
+const abstractStepDotSizes = ["size-7", "size-5", "size-3", "size-5", "size-7"] as const;
 
 function normalizeAnswer(value: string) {
     return value
@@ -57,6 +60,12 @@ function parseListAnswer(value: string) {
         .split("\n")
         .map((line) => line.trim())
         .filter((line) => line.length > 0);
+}
+
+function normalizeAbstractStepValue(value: number) {
+    return abstractStepValues.reduce((closest, current) =>
+        Math.abs(current - value) < Math.abs(closest - value) ? current : closest
+    );
 }
 
 function formatDisplayDate(dateValue: string) {
@@ -244,7 +253,12 @@ function AbstractBarChartCard({ rawValue, isFilled }: { rawValue: string; isFill
         { label: "あたたかい/つめたい", left: "あたたかい", right: "つめたい", value: Number(parsed.values["あたたかい/つめたい"] ?? "") },
         { label: "軽い/重い", left: "軽い", right: "重い", value: Number(parsed.values["軽い/重い"] ?? "") },
         { label: "なめらか/尖っている", left: "なめらか", right: "尖っている", value: Number(parsed.values["なめらか/尖っている"] ?? "") },
-    ].filter((item) => !Number.isNaN(item.value));
+    ]
+        .filter((item) => !Number.isNaN(item.value))
+        .map((item) => ({
+            ...item,
+            value: normalizeAbstractStepValue(item.value),
+        }));
 
     if (!isFilled || chartItems.length === 0) {
         return <p className="text-sm leading-7 text-muted-foreground">まだ入力されていません。</p>;
@@ -253,24 +267,27 @@ function AbstractBarChartCard({ rawValue, isFilled }: { rawValue: string; isFill
     return (
         <div className="space-y-4">
             {chartItems.map((item) => (
-                <div key={item.label} className="space-y-2">
-                    <div className="flex items-center justify-between gap-4 text-sm">
-                        <span className="font-medium text-slate-700">{item.left}</span>
-                        <span className="text-xs font-semibold text-slate-400">{item.label}</span>
-                        <span className="font-medium text-slate-700">{item.right}</span>
+                <div key={item.label} className="rounded-2xl border border-slate-200 bg-slate-50/80 px-4 py-4">
+                    <div className="flex items-center gap-4">
+                        <span className="w-16 shrink-0 text-left text-sm text-slate-700 md:w-24">{item.left}</span>
+                        <div className="flex flex-1 items-center justify-between gap-3" aria-hidden="true">
+                            {abstractStepValues.map((stepValue, index) => {
+                                const isSelected = item.value === stepValue;
+
+                                return (
+                                    <span
+                                        key={`${item.label}-${stepValue}`}
+                                        className={cn(
+                                            "record-abstract-dot shrink-0 rounded-full border-2 bg-transparent",
+                                            abstractStepDotSizes[index],
+                                            isSelected ? "record-abstract-dot-selected border-[#1C5D99] bg-[#1C5D99]" : "border-slate-300"
+                                        )}
+                                    />
+                                );
+                            })}
+                        </div>
+                        <span className="w-16 shrink-0 text-right text-sm text-slate-700 md:w-24">{item.right}</span>
                     </div>
-                    <div className="relative h-4 rounded-full bg-slate-200">
-                        <div className="absolute left-1/2 top-1/2 h-6 w-px -translate-y-1/2 bg-slate-400" />
-                        <div
-                            className="h-4 rounded-full bg-gradient-to-r from-sky-300 via-[#1C5D99] to-slate-700"
-                            style={{ width: `${item.value}%` }}
-                        />
-                        <div
-                            className="absolute top-1/2 h-5 w-5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 border-white bg-[#1C5D99] shadow-sm"
-                            style={{ left: `${item.value}%` }}
-                        />
-                    </div>
-                    <div className="text-right text-xs font-medium text-[#1C5D99]">{item.value}</div>
                 </div>
             ))}
         </div>
@@ -431,7 +448,7 @@ function getFunctionCardSummary(itemKey: string, answers: HearingAnswers) {
 
 function RecordItemCard({ item, categoryKey, answers }: { item: RecordItem; categoryKey: string; answers: HearingAnswers }) {
     return (
-        <div className={item.isFilled ? "rounded-xl bg-slate-50 p-4" : "rounded-xl border border-dashed border-slate-200 bg-slate-50/40 p-4"}>
+        <div className={item.isFilled ? "record-item-card rounded-xl bg-slate-50 p-4" : "record-item-card rounded-xl border border-dashed border-slate-200 bg-slate-50/40 p-4"}>
             <div className="mb-2 flex items-center gap-4">
                 <div className={categoryKey === "function" && item.key === "site-category" ? "flex items-center gap-4" : "flex items-center gap-2"}>
                     {categoryKey === "target" ? getTargetCardIcon(item.key, answers) : null}
@@ -515,16 +532,13 @@ export default function RecordPage() {
 
     return (
         <>
-            <div className="absolute main-header -top-4 left-8 pl-4 pr-4 pt-2 pb-2">
-                <p className="main-header-subtitle text-md">カルテ</p>
-            </div>
             <div className="main-content p-8">
-                <div className="mt-8 mb-12 space-y-6">
-                    <div>
+                <div className="record-print-root mb-12 space-y-6">
+                    <div className="record-print-title">
                         <h1 className="text-2xl font-bold text-slate-900">ヒアリングカルテ</h1>
                         <p className="mt-2 text-sm text-muted-foreground">回答済み・未回答を含めて、カテゴリごとの進捗を一覧表示しています。</p>
                     </div>
-                    <div className="grid gap-4 xl:grid-cols-2">
+                    <div className="record-category-grid grid gap-4 xl:grid-cols-2">
                         {Object.entries(Categories).map(([categoryKey, category]) => {
                             const categoryItems = items[categoryKey] ?? [];
                             const filledCount = categoryItems.filter((item) => item.isFilled).length;
@@ -534,7 +548,7 @@ export default function RecordPage() {
                             const rightRequirementItems = categoryItems.filter((item) => item.key === "company-detail" || item.key === "background");
 
                             return (
-                                <section key={categoryKey} className={isRequirementsCategory ? "rounded-2xl border border-border bg-white p-6 shadow-sm xl:col-span-2" : "rounded-2xl border border-border bg-white p-6 shadow-sm"}>
+                                <section key={categoryKey} className={isRequirementsCategory ? "record-category-section rounded-2xl border border-border bg-white p-6 shadow-sm xl:col-span-2" : "record-category-section rounded-2xl border border-border bg-white p-6 shadow-sm"}>
                                     <div className="mb-4 flex items-center justify-between gap-4 border-b border-border pb-3">
                                         <div className="flex items-center gap-3">
                                             <figure className="flex h-10 w-10 items-center justify-center rounded-lg bg-slate-50 p-2">
@@ -548,23 +562,23 @@ export default function RecordPage() {
                                                 <h2 className="text-lg font-semibold text-slate-900">{category.label}</h2>
                                             </div>
                                         </div>
-                                        <div className="flex flex-wrap items-center justify-end gap-2">
+                                        <div className="record-category-actions flex flex-wrap items-center justify-end gap-2">
                                             <span className="rounded-full bg-slate-100 px-2.5 py-1 text-[11px] font-medium text-slate-500">
                                                 {filledCount}/{categoryItems.length}件
                                             </span>
                                             <Link
                                                 href={categoryHref}
-                                                className={filledCount > 0
+                                                className={`print-hidden ${filledCount > 0
                                                     ? "inline-flex items-center rounded-full bg-[#6599FF] px-3 py-1.5 text-xs font-medium text-white transition-opacity hover:opacity-85"
                                                     : "inline-flex items-center rounded-full border border-[#6599FF] px-3 py-1.5 text-xs font-medium text-[#6599FF] transition-colors hover:bg-[#6599FF]/5"
-                                                }
+                                                    }`}
                                             >
                                                 {filledCount > 0 ? "編集する" : "入力する"}
                                             </Link>
                                         </div>
                                     </div>
                                     {isRequirementsCategory ? (
-                                        <div className="grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
+                                        <div className="record-requirements-grid grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
                                             <div>
                                                 {selfIntroductionItem ? <RecordItemCard item={selfIntroductionItem} categoryKey={categoryKey} answers={answers} /> : null}
                                             </div>
