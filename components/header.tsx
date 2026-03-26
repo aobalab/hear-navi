@@ -27,7 +27,7 @@ function Header({ category, section: _section }: { category: string; section: st
                                 <figure className={isActive ? "rounded-xl bg-[#6599FF]/10 p-3" : "rounded-xl p-3 transition-colors hover:bg-slate-100"}>
                                     <Icon
                                         aria-hidden="true"
-                                        className={isActive ? "h-12 w-12 text-[#6599FF]" : "h-12 w-12 text-slate-700"}
+                                        className={isActive ? "h-12 w-12 text-[#F4C94A]" : "h-12 w-12 text-[#6599FF]"}
                                     />
                                 </figure>
                                 <span className={isActive ? "text-sm font-semibold text-[#6599FF]" : "text-sm font-medium text-slate-700"}>{item.label}</span>
@@ -43,7 +43,7 @@ function Header({ category, section: _section }: { category: string; section: st
                         <figure className={category === "record" ? "rounded-xl bg-[#6599FF]/10 p-3" : "rounded-xl p-3 transition-colors hover:bg-slate-100"}>
                             <RecordIcon
                                 aria-hidden="true"
-                                className={category === "record" ? "h-12 w-12 text-[#6599FF]" : "h-12 w-12 text-slate-700"}
+                                className={category === "record" ? "h-12 w-12 text-[#F4C94A]" : "h-12 w-12 text-[#6599FF]"}
                             />
                         </figure>
                         <span className={category === "record" ? "text-sm font-semibold text-[#6599FF]" : "text-sm font-medium text-slate-700"}>カルテ</span>
