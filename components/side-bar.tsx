@@ -11,9 +11,9 @@ function SideBar({ category, section }: { category: string; section?: string }) 
     return (
         <div className="main-side-bar flex h-fit self-start flex-col gap-8 p-4 min-w-[150px]">
             <div className="flex flex-col items-center gap-3 rounded-xl bg-white px-4 py-5 text-center shadow-sm">
-                <figure className="rounded-xl bg-[#6599FF]/10 p-3">
+                <figure className="rounded-xl bg-[#6599FF]/10 p-4">
                     {CategoryIcon ? (
-                        <CategoryIcon aria-hidden="true" className="h-12 w-12 text-[#6599FF]" />
+                        <CategoryIcon aria-hidden="true" className="h-14 w-14 text-[#6599FF]" />
                     ) : null}
                 </figure>
                 <p className="text-base font-semibold text-slate-800">{categoryLabel}</p>
