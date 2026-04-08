@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { BadgeCent, Baby, Briefcase, BriefcaseBusiness, Building2, CalendarRange, CircleOff, Mars, Newspaper, Search, ShoppingCart, UserRound, Users, Venus } from "lucide-react";
+import { BadgeCent, Baby, Briefcase, BriefcaseBusiness, Building2, CalendarRange, CircleOff, Mars, Newspaper, Printer, Search, ShoppingCart, UserRound, Users, Venus } from "lucide-react";
 
 import { Categories } from "@/app/hearing/config";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { parseLabeledAnswer } from "@/lib/hearing-answer-format";
 import { hearingCategoryIcons } from "@/lib/hearing-category-icons";
@@ -530,14 +531,27 @@ export default function RecordPage() {
     }, []);
 
     const hasAnyAnswer = Object.values(items).some((categoryItems) => categoryItems.length > 0);
+    const handlePrint = () => {
+        window.print();
+    };
 
     return (
         <>
             <div className="main-content p-8">
                 <div className="record-print-root mb-12 space-y-6">
-                    <div className="record-print-title">
-                        <h1 className="text-2xl font-bold text-slate-900">ヒアリングカルテ</h1>
-                        <p className="mt-2 text-sm text-muted-foreground">回答済み・未回答を含めて、カテゴリごとの進捗を一覧表示しています。</p>
+                    <div className="record-print-title flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+                        <div>
+                            <h1 className="text-2xl font-bold text-slate-900">ヒアリングカルテ</h1>
+                            <p className="mt-2 text-sm text-muted-foreground">回答済み・未回答を含めて、カテゴリごとの進捗を一覧表示しています。</p>
+                        </div>
+                        <Button
+                            type="button"
+                            onClick={handlePrint}
+                            className="print-hidden h-10 rounded-full bg-[#1C5D99] px-4 text-sm font-semibold text-white hover:bg-[#164a7a]"
+                        >
+                            <Printer aria-hidden="true" className="size-4" />
+                            印刷する
+                        </Button>
                     </div>
                     <div className="record-category-grid grid gap-4 xl:grid-cols-2">
                         {Object.entries(Categories).map(([categoryKey, category]) => {
