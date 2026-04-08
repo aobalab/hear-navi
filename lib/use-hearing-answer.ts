@@ -2,9 +2,9 @@
 
 import { useSyncExternalStore } from "react";
 
-import { HEARING_STORAGE_EVENT, readHearingAnswers, writeHearingAnswer } from "@/lib/hearing-storage";
+import { HEARING_STORAGE_EVENT, readHearingAnswers, type HearingAnswers, writeHearingAnswer } from "@/lib/hearing-storage";
 
-const emptyAnswers = {};
+const emptyAnswers: HearingAnswers = {};
 
 function subscribeToHearingAnswers(onStoreChange: () => void) {
     if (typeof window === "undefined") {
