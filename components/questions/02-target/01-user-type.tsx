@@ -1,38 +1,43 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { Building2, UserRound } from "lucide-react";
 
 import { Field, FieldContent, FieldDescription } from "@/components/ui/field";
 import { cn } from "@/lib/utils";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { formatLabeledAnswer, parseLabeledAnswer } from "@/lib/hearing-answer-format";
-import { readHearingAnswers, writeHearingAnswer } from "@/lib/hearing-storage";
+import { writeHearingAnswer } from "@/lib/hearing-storage";
+import { useHearingAnswer } from "@/lib/use-hearing-answer";
+
+const personalBranchSections = ["gender", "age", "status"] as const;
 
 export default function UserTypeQuestion() {
-    const [audienceType, setAudienceType] = useState("");
-    const [isReady, setIsReady] = useState(false);
+    const [storedValue, setStoredValue] = useHearingAnswer("user-type");
+    const { values, remainder } = parseLabeledAnswer(storedValue, ["対象"]);
+    const audienceType = values["対象"] ?? remainder;
 
-    useEffect(() => {
-        const stored = readHearingAnswers()["user-type"] ?? "";
-        const { values, remainder } = parseLabeledAnswer(stored, ["対象"]);
+    const handleAudienceTypeChange = (nextAudienceType: string) => {
+        setStoredValue(
+            formatLabeledAnswer([
+                ["対象", nextAudienceType],
+            ])
+        );
 
-        setAudienceType(values["対象"] ?? remainder);
-        setIsReady(true);
-    }, []);
-
-    useEffect(() => {
-        if (!isReady) {
+        if (!nextAudienceType) {
             return;
         }
 
-        writeHearingAnswer(
-            "user-type",
-            formatLabeledAnswer([
-                ["対象", audienceType],
-            ])
-        );
-    }, [audienceType, isReady]);
+        if (nextAudienceType === "法人") {
+            personalBranchSections.forEach((section) => {
+                writeHearingAnswer(section, "");
+            });
+            return;
+        }
+
+        if (nextAudienceType === "個人") {
+            writeHearingAnswer("industry", "");
+        }
+    };
 
     return (
         <Field>
@@ -40,7 +45,7 @@ export default function UserTypeQuestion() {
                 <FieldDescription className="mb-3">
                     主なターゲット像を選択してください。
                 </FieldDescription>
-                <RadioGroup value={audienceType} onValueChange={setAudienceType} className="grid gap-4 md:grid-cols-2">
+                <RadioGroup value={audienceType} onValueChange={handleAudienceTypeChange} className="grid gap-4 md:grid-cols-2">
                     <label
                         htmlFor="user-type-business"
                         className={cn(

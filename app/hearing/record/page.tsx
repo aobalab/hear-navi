@@ -4,13 +4,12 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { BadgeCent, Baby, Briefcase, BriefcaseBusiness, Building2, CalendarRange, CircleOff, Mars, Newspaper, Printer, Search, ShoppingCart, UserRound, Users, Venus } from "lucide-react";
 
-import { Categories } from "@/app/hearing/config";
+import { Categories, getCategorySections, getFirstSectionTitle } from "@/app/hearing/config";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { parseLabeledAnswer } from "@/lib/hearing-answer-format";
 import { hearingCategoryIcons } from "@/lib/hearing-category-icons";
 import { HEARING_STORAGE_EVENT, readHearingAnswers, type HearingAnswers } from "@/lib/hearing-storage";
-import nextConfig from "@/next.config";
 
 type RecordItem = {
     key: string;
@@ -310,6 +309,10 @@ function getTargetCardIcon(itemKey: string, answers: HearingAnswers) {
         }
     }
 
+    if (itemKey === "industry") {
+        return <BriefcaseBusiness className="size-5 text-[#1C5D99]" aria-hidden="true" />;
+    }
+
     if (itemKey === "gender") {
         const gender = parseLabeledAnswer(answers.gender ?? "", ["傾向"]);
         const genderType = gender.values["傾向"] ?? gender.remainder;
@@ -498,8 +501,8 @@ export default function RecordPage() {
             const answers = readHearingAnswers();
             setAnswers(answers);
 
-            const nextItems = Object.entries(Categories).reduce<Record<string, RecordItem[]>>((accumulator, [categoryKey, category]) => {
-                const categoryItems = category.sections
+            const nextItems = Object.entries(Categories).reduce<Record<string, RecordItem[]>>((accumulator, [categoryKey]) => {
+                const categoryItems = getCategorySections(categoryKey, answers)
                     .map((section) => {
                         const sectionValue = answers[section.title] ?? "";
                         const normalizedValue = normalizeRecordAnswer(section.title, sectionValue);
@@ -557,7 +560,8 @@ export default function RecordPage() {
                         {Object.entries(Categories).map(([categoryKey, category]) => {
                             const categoryItems = items[categoryKey] ?? [];
                             const filledCount = categoryItems.filter((item) => item.isFilled).length;
-                            const categoryHref = `/hearing/${categoryKey}/${category.sections[0].title}`;
+                            const firstSectionTitle = getFirstSectionTitle(categoryKey, answers);
+                            const categoryHref = `/hearing/${categoryKey}/${firstSectionTitle ?? category.sections[0].title}`;
                             const CategoryIcon = hearingCategoryIcons[categoryKey];
                             const isRequirementsCategory = categoryKey === "requirements";
                             const selfIntroductionItem = categoryItems.find((item) => item.key === "self-introduction");

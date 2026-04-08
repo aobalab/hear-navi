@@ -2,9 +2,9 @@
 
 import { useSyncExternalStore } from "react";
 
-import { HEARING_STORAGE_EVENT, readHearingAnswers, writeHearingAnswer } from "@/lib/hearing-storage";
+import { HEARING_STORAGE_EVENT, readHearingAnswers, type HearingAnswers } from "@/lib/hearing-storage";
 
-const emptyAnswers = {};
+const emptyAnswers: HearingAnswers = {};
 
 function subscribeToHearingAnswers(onStoreChange: () => void) {
     if (typeof window === "undefined") {
@@ -20,13 +20,6 @@ function subscribeToHearingAnswers(onStoreChange: () => void) {
     };
 }
 
-export function useHearingAnswer(section: string) {
-    const answers = useSyncExternalStore(subscribeToHearingAnswers, readHearingAnswers, () => emptyAnswers);
-    const value = answers[section] ?? "";
-
-    const updateValue = (nextValue: string) => {
-        writeHearingAnswer(section, nextValue);
-    };
-
-    return [value, updateValue] as const;
+export function useHearingAnswers() {
+    return useSyncExternalStore(subscribeToHearingAnswers, readHearingAnswers, () => emptyAnswers);
 }

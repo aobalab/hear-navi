@@ -4,6 +4,7 @@ import SelfIntroductionRequirementsQuestion from "@/components/questions/01-requ
 import CompanyDetailQuestion from "./01-requirements/02-company-detail";
 import BackgroundQuestion from "./01-requirements/03-background";
 import UserTypeQuestion from "@/components/questions/02-target/01-user-type";
+import IndustryQuestion from "@/components/questions/02-target/industry";
 import GenderQuestion from "@/components/questions/02-target/02-gender";
 import AgeQuestion from "@/components/questions/02-target/03-age";
 import StatusQuestion from "@/components/questions/02-target/04-status";
@@ -23,6 +24,7 @@ export const questionComponents: Record<string, Record<string, ComponentType>> =
     },
     target: {
         "user-type": UserTypeQuestion,
+        industry: IndustryQuestion,
         gender: GenderQuestion,
         age: AgeQuestion,
         status: StatusQuestion,

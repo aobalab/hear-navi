@@ -1,10 +1,14 @@
-import { Categories } from "@/app/hearing/config";
+"use client";
+
+import { Categories, getCategorySections } from "@/app/hearing/config";
 import { hearingCategoryIcons } from "@/lib/hearing-category-icons";
+import { useHearingAnswers } from "@/lib/use-hearing-answers";
 import Link from "next/link";
 
 function SideBar({ category, section }: { category: string; section?: string }) {
+    const answers = useHearingAnswers();
     const currentCategory = Categories[category as keyof typeof Categories];
-    const sections = currentCategory?.sections ?? [];
+    const sections = getCategorySections(category, answers);
     const categoryLabel = currentCategory?.label ?? "ヒアリング";
     const CategoryIcon = hearingCategoryIcons[category];
 

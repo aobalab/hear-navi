@@ -5,6 +5,11 @@ export const HEARING_STORAGE_EVENT = "hear-navi:answers-updated";
 
 export type HearingAnswers = Record<string, string>;
 
+const emptyHearingAnswers: HearingAnswers = {};
+
+let cachedStoredValue: string | null = null;
+let cachedAnswers: HearingAnswers = emptyHearingAnswers;
+
 export function getSectionLabelMap() {
     return Object.values(Categories).reduce<Record<string, string>>((accumulator, category) => {
         category.sections.forEach((section) => {
@@ -15,33 +20,46 @@ export function getSectionLabelMap() {
     }, {});
 }
 
-export function readHearingAnswers(): HearingAnswers {
-    if (typeof window === "undefined") {
-        return {};
-    }
-
-    const stored = window.sessionStorage.getItem(HEARING_STORAGE_KEY);
-
+function parseHearingAnswers(stored: string | null) {
     if (!stored) {
-        return {};
+        return emptyHearingAnswers;
     }
 
     try {
         const parsed = JSON.parse(stored);
         if (!parsed || typeof parsed !== "object") {
-            return {};
+            return emptyHearingAnswers;
         }
 
-        return Object.entries(parsed).reduce<HearingAnswers>((accumulator, [key, value]) => {
+        const normalizedAnswers = Object.entries(parsed).reduce<HearingAnswers>((accumulator, [key, value]) => {
             if (typeof value === "string") {
                 accumulator[key] = value;
             }
 
             return accumulator;
         }, {});
+
+        return Object.keys(normalizedAnswers).length > 0 ? normalizedAnswers : emptyHearingAnswers;
     } catch {
-        return {};
+        return emptyHearingAnswers;
     }
+}
+
+export function readHearingAnswers(): HearingAnswers {
+    if (typeof window === "undefined") {
+        return emptyHearingAnswers;
+    }
+
+    const stored = window.sessionStorage.getItem(HEARING_STORAGE_KEY);
+
+    if (stored === cachedStoredValue) {
+        return cachedAnswers;
+    }
+
+    cachedStoredValue = stored;
+    cachedAnswers = parseHearingAnswers(stored);
+
+    return cachedAnswers;
 }
 
 export function writeHearingAnswer(section: string, value: string) {
